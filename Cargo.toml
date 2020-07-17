@@ -9,7 +9,7 @@ edition = "2018"
 [dependencies]
 gdk = "0.12.0"
 glib = "0.9.3"
-pizarra = { git = "https://gitlab.com/categulario/pizarra.git", branch = "feature/separate-crates" }
+pizarra = { git = "https://gitlab.com/categulario/pizarra.git" }
 
 [dependencies.cairo-rs]
 version = "0.8.1"

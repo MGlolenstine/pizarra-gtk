@@ -421,7 +421,7 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 [[package]]
 name = "pizarra"
 version = "0.5.4"
-source = "git+https://gitlab.com/categulario/pizarra.git?branch=feature/separate-crates#bf2393c83cff8ed416b43f191adc04242762992b"
+source = "git+https://gitlab.com/categulario/pizarra.git#8415fdfd91f444db4cb8ca5dd576dd94917d06fd"
 dependencies = [
  "lazy_static",
  "regex",
