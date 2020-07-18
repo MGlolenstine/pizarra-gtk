@@ -1,7 +1,7 @@
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
 use std::env;
 
@@ -14,7 +14,7 @@ use gdk::{EventMask, EventType, ScrollDirection};
 use gtk::prelude::*;
 use gio::prelude::*;
 use glib::clone;
-use cairo::{SvgSurface, ImageSurface, Context};
+use cairo::{ImageSurface, Context};
 
 use pizarra::{
     App, app::{
@@ -78,25 +78,22 @@ fn render_drawing(controller: &App, ctx: &Context, topleft: Point) {
     }
 }
 
-fn save_to_svg_logic(controller: &mut App, filename: &Path) {
-    if let Some([topleft, bottomright]) = controller.get_bounds() {
+fn save_to_svg_logic(controller: &mut App, filename: &Path) -> std::io::Result<()> {
+    if let Some(svg_data) = controller.to_svg() {
         let svgfilename = ensure_extension(&filename, "svg");
-        let width = (bottomright.x - topleft.x).abs() + 2.0 * RENDER_PADDING;
-        let height = (bottomright.y - topleft.y).abs() + 2.0 * RENDER_PADDING;
-        let surface = SvgSurface::for_stream(width, height, File::create(&svgfilename).unwrap()).unwrap();
-        let context = Context::new(&surface);
 
-        render_drawing(&controller, &context, topleft);
-        surface.finish_output_stream().unwrap();
+        let mut svgfile = File::create(&svgfilename)?;
+        svgfile.write_all(svg_data.as_bytes())?;
+
         controller.set_saved(svgfilename);
     }
+
+    Ok(())
 }
 
 /// Implements the logic of the _save-as_ feature
-fn save_as_logic<P, F>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCell<App>>, callback: F)
-    where
-    P: IsA<Window>,
-    F: Fn() -> (),
+fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCell<App>>) -> std::io::Result<()>
+    where P: IsA<Window>
 {
     let save_file_chooser = FileChooserNative::new(Some("Guardar"), Some(window), FileChooserAction::Save, Some("Guardar"), Some("Cancelar"));
     let res = save_file_chooser.run();
@@ -104,14 +101,14 @@ fn save_as_logic<P, F>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCel
     match res {
         ResponseType::Accept => {
             if let Some(filename) = save_file_chooser.get_filename() {
-                save_to_svg_logic(&mut controller.borrow_mut(), &filename);
+                save_to_svg_logic(&mut controller.borrow_mut(), &filename)?;
                 set_subtitle(&header_bar, controller.borrow().get_save_status());
             }
         },
         _ => {},
     }
 
-    callback();
+    Ok(())
 }
 
 fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<App>>) {
@@ -125,10 +122,10 @@ fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc
                     let mut svg = String::new();
 
                     if let Ok(_) = file.read_to_string(&mut svg) {
-                        let mut controller = controller.borrow_mut();
-                        if let Ok(_) = controller.open(&svg) {
-                            controller.set_saved(filename);
-                            set_subtitle(&header_bar, controller.get_save_status());
+                        let ans = { controller.borrow_mut().open(&svg) };
+                        if let Ok(_) = ans {
+                            controller.borrow_mut().set_saved(filename);
+                            set_subtitle(&header_bar, controller.borrow().get_save_status());
                         } else {
                             dialog(window, "No pudimos interpretar el formato de este archivo :(", MessageType::Error);
                         }
@@ -227,8 +224,11 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         let mut file = File::open(&filename).expect("Could not open given file");
 
         file.read_to_string(&mut svg).expect("could not read file contents");
-        controller.borrow_mut().open(&svg).expect("Could not parse given file");
-        controller.borrow_mut().set_saved(filename);
+        {
+            let mut controller = controller.borrow_mut();
+            controller.open(&svg).expect("Could not parse given file");
+            controller.set_saved(filename);
+        }
         set_subtitle(&header_bar, controller.borrow().get_save_status());
     }
 
@@ -280,11 +280,17 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     drawing_area.add_events(event_mask);
 
     drawing_area.connect_draw(clone!(@strong controller => move |_dw, ctx| {
-        let controller = controller.borrow();
-        let t = controller.get_transform();
+        let t;
+        let commands;
+
+        {
+            let controller = controller.borrow();
+            t = controller.get_transform();
+            commands = controller.draw_commands_for_screen();
+        }
+
         let bgcolor = Color::black();
 
-        let commands = controller.draw_commands_for_screen();
 
         ctx.set_source_rgb(bgcolor.r, bgcolor.g, bgcolor.b);
         ctx.paint();
@@ -415,9 +421,8 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => open_logic(&window, &header_bar, controller.clone()),
             SaveStatus::NewAndChanged => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, clone!(@strong controller, @strong header_bar, @strong window => move || {
-                    save_as_logic(&window, &header_bar, controller.clone(), clone!(@strong controller, @strong header_bar, @strong window => move || {
-                        open_logic(&window, &header_bar, controller.clone());
-                    }));
+                    save_as_logic(&window, &header_bar, controller.clone());
+                    open_logic(&window, &header_bar, controller.clone());
                     Inhibit(false)
                 }), clone!(@strong controller, @strong header_bar, @strong window => move || {
                     open_logic(&window, &header_bar, controller.clone());
@@ -449,8 +454,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => {},
             SaveStatus::NewAndChanged => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, || {
-                    save_as_logic(&window, &header_bar, controller.clone(), || {
-                    });
+                    save_as_logic(&window, &header_bar, controller.clone());
                     Inhibit(false)
                 }, || {
                     controller.borrow_mut().reset();
@@ -492,8 +496,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         match save_status {
             SaveStatus::NewAndEmpty => {}, // nothing to save actually
             SaveStatus::NewAndChanged => {
-                save_as_logic(&window, &header_bar, controller.clone(), || {
-                });
+                save_as_logic(&window, &header_bar, controller.clone());
             },
             SaveStatus::Unsaved(path) => {
                 save_to_svg_logic(&mut controller.borrow_mut(), &path);
@@ -511,16 +514,13 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         match save_status {
             SaveStatus::NewAndEmpty => {},
             SaveStatus::NewAndChanged => {
-                save_as_logic(&window, &header_bar, controller.clone(), || {
-                });
+                save_as_logic(&window, &header_bar, controller.clone());
             },
             SaveStatus::Unsaved(_path) => {
-                save_as_logic(&window, &header_bar, controller.clone(), || {
-                });
+                save_as_logic(&window, &header_bar, controller.clone());
             },
             SaveStatus::Saved(_path) => {
-                save_as_logic(&window, &header_bar, controller.clone(), || {
-                });
+                save_as_logic(&window, &header_bar, controller.clone());
             },
         }
     }));
