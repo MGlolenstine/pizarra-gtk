@@ -420,9 +420,9 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "pizarra"
-version = "0.6.1"
+version = "0.6.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f679b73fdd6be8d255dbcbc43ac191ebcb81b5bef72783d96bcde5700571f749"
+checksum = "a17ad163d70187a9f8ae0c96768ea4161e30d4b7dc584e3e3bd2a45033521125"
 dependencies = [
  "lazy_static",
  "regex",
