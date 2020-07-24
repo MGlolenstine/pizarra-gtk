@@ -3,7 +3,7 @@ use std::f64::consts::PI;
 use cairo::{Context, LineCap, LineJoin};
 
 use pizarra::{
-    draw_commands::DrawCommand, shape::corners_to_props, transform::Transform,
+    draw_commands::DrawCommand, transform::Transform,
 };
 
 pub trait Drawable {
@@ -36,26 +36,7 @@ impl Drawable for DrawCommand {
                     ctx.stroke();
                 }
             },
-            DrawCommand::Rectangle {
-                color, corner_1, corner_2,
-            } => {
-                let (x, y, width, height) = corners_to_props(
-                    t.to_screen_coordinates(corner_1),
-                    t.to_screen_coordinates(corner_2)
-                );
-                ctx.rectangle(x, y, width, height);
-                ctx.set_source_rgb(color.r, color.g, color.b);
-                ctx.fill();
-            },
-            DrawCommand::Ellipse {
-                color, corner_1, corner_2,
-            } => {
-                ctx.set_source_rgb(color.r, color.g, color.b);
-                ctx.move_to(corner_1.x, corner_2.y);
-                ctx.arc(0.5, 0.5, 0.5, 0.0, 2.0*PI);
-                ctx.scale(corner_2.x - corner_1.x, corner_2.y - corner_1.y);
-                ctx.fill();
-            },
+            _ => {},
         }
     }
 }
