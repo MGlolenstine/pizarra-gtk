@@ -536,12 +536,17 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Line));
     }));
 
-    let set_rectangle_menu: MenuItem = builder.get_object("tool-rect-btn").expect("no pen menu");
+    let set_rectangle_menu: MenuItem = builder.get_object("tool-rect-btn").expect("no ractangle menu");
     set_rectangle_menu.connect_activate(clone!(@strong controller => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Rectangle));
     }));
 
-    let set_eraser_menu: MenuItem = builder.get_object("tool-eraser-btn").expect("no pen menu");
+    let set_polygon_menu: MenuItem = builder.get_object("tool-polygon-btn").expect("no polygon menu");
+    set_polygon_menu.connect_activate(clone!(@strong controller => move |_menu| {
+        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Polygon));
+    }));
+
+    let set_eraser_menu: MenuItem = builder.get_object("tool-eraser-btn").expect("no eraser menu");
     set_eraser_menu.connect_activate(clone!(@strong controller => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Eraser);
     }));
