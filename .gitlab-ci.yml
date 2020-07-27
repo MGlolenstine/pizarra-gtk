@@ -4,6 +4,9 @@ stages:
 build:
   stage: build
   image: "rust:latest"
+  before_script:
+    - apt-get update -yqq
+    - apt-get install -yqq --no-install-recommends pango
   script:
     - cargo build --target x86_64-unknown-linux-gnu --release
   artifacts:
