@@ -546,6 +546,16 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Polygon));
     }));
 
+    let set_circle_menu: MenuItem = builder.get_object("tool-circle-btn").expect("no circle menu");
+    set_circle_menu.connect_activate(clone!(@strong controller => move |_menu| {
+        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Circle));
+    }));
+
+    let set_ellipse_menu: MenuItem = builder.get_object("tool-ellipse-btn").expect("no ellipse menu");
+    set_ellipse_menu.connect_activate(clone!(@strong controller => move |_menu| {
+        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Ellipse));
+    }));
+
     let set_eraser_menu: MenuItem = builder.get_object("tool-eraser-btn").expect("no eraser menu");
     set_eraser_menu.connect_activate(clone!(@strong controller => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Eraser);

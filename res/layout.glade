@@ -192,6 +192,22 @@
       </object>
     </child>
     <child>
+      <object class="GtkMenuItem" id="tool-circle-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Círculo</property>
+        <accelerator key="c" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="tool-ellipse-btn">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Elipse</property>
+        <accelerator key="e" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+      </object>
+    </child>
+    <child>
       <object class="GtkSeparatorMenuItem">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
@@ -244,7 +260,7 @@
             <property name="can_focus">True</property>
             <property name="receives_default">True</property>
             <property name="tooltip_text" translatable="yes">Cambia el color con el que se dibujan las figuras</property>
-            <property name="rgba">rgb(138,226,52)</property>
+            <property name="rgba">rgb(255,255,255)</property>
             <accelerator key="c" signal="activate" modifiers="GDK_MOD1_MASK"/>
           </object>
         </child>
