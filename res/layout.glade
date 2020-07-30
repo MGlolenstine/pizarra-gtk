@@ -172,7 +172,7 @@
         <property name="can_focus">False</property>
         <property name="tooltip_text" translatable="yes">Úsala para dibujar libremente sobre la pizarra</property>
         <property name="label" translatable="yes">Lápiz</property>
-        <accelerator key="l" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+        <accelerator key="l" signal="activate" modifiers=""/>
       </object>
     </child>
     <child>
@@ -180,7 +180,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Rectángulo</property>
-        <accelerator key="r" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+        <accelerator key="r" signal="activate" modifiers=""/>
       </object>
     </child>
     <child>
@@ -188,7 +188,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Polígono</property>
-        <accelerator key="p" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+        <accelerator key="p" signal="activate" modifiers=""/>
       </object>
     </child>
     <child>
@@ -196,7 +196,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Círculo</property>
-        <accelerator key="c" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+        <accelerator key="c" signal="activate" modifiers=""/>
       </object>
     </child>
     <child>
@@ -204,7 +204,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Elipse</property>
-        <accelerator key="e" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+        <accelerator key="e" signal="activate" modifiers=""/>
       </object>
     </child>
     <child>
@@ -218,7 +218,7 @@
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="label" translatable="yes">Goma</property>
-        <accelerator key="b" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+        <accelerator key="g" signal="activate" modifiers=""/>
       </object>
     </child>
   </object>
