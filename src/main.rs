@@ -209,6 +209,15 @@ fn dialog(window: &ApplicationWindow, message: &str, msg_type: MessageType) {
     message_dialog.hide();
 }
 
+fn gtk_button(btn: u32) -> MouseButton {
+    match btn {
+        1 => MouseButton::Left,
+        2 => MouseButton::Middle,
+        3 => MouseButton::Right,
+        _ => MouseButton::Unknown,
+    }
+}
+
 fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
     let layout = include_str!("../res/layout.glade");
@@ -325,27 +334,21 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         Inhibit(false)
     }));
 
-    drawing_area.connect_button_press_event(clone!(@strong controller => move |_dw, event| {
+    drawing_area.connect_button_press_event(clone!(@strong controller => move |dw, event| {
         if let EventType::ButtonPress = event.get_event_type() {
-            controller.borrow_mut().handle_mouse_button_pressed(match event.get_button() {
-                1 => MouseButton::Left,
-                2 => MouseButton::Middle,
-                3 => MouseButton::Right,
-                _ => MouseButton::Unknown,
-            }, Point::from(event.get_position()));
+            if let ShouldRedraw::Yes = controller.borrow_mut().handle_mouse_button_pressed(gtk_button(event.get_button()), Point::from(event.get_position())) {
+                dw.queue_draw();
+            }
         }
 
         Inhibit(false)
     }));
 
-    drawing_area.connect_button_release_event(clone!(@strong controller, @strong header_bar => move |_dw, event| {
+    drawing_area.connect_button_release_event(clone!(@strong controller, @strong header_bar => move |dw, event| {
         if let EventType::ButtonRelease = event.get_event_type() {
-            controller.borrow_mut().handle_mouse_button_released(match event.get_button() {
-                1 => MouseButton::Left,
-                2 => MouseButton::Middle,
-                3 => MouseButton::Right,
-                _ => MouseButton::Unknown,
-            }, Point::from(event.get_position()));
+            if let ShouldRedraw::Yes = controller.borrow_mut().handle_mouse_button_released(gtk_button(event.get_button()), Point::from(event.get_position())) {
+                dw.queue_draw();
+            }
         }
 
         set_subtitle(&header_bar, controller.borrow().get_save_status());

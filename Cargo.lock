@@ -334,9 +334,9 @@ checksum = "e2abad23fbc42b3700f2f279844dc832adb2b2eb069b2df918f455c4e18cc646"
 
 [[package]]
 name = "libc"
-version = "0.2.73"
+version = "0.2.74"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bd7d4bd64732af4bf3a67f367c27df8520ad7e230c5817b8ff485864d80242b9"
+checksum = "a2f02823cf78b754822df5f7f268fb59822e7296276d3e069d8e8cb26a14bd10"
 
 [[package]]
 name = "memchr"
@@ -427,14 +427,14 @@ dependencies = [
  "gio",
  "glib",
  "gtk",
- "pizarra 0.7.1",
+ "pizarra 0.7.2",
 ]
 
 [[package]]
 name = "pizarra"
-version = "0.7.1"
+version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "754a6b4663c231af2dc0ba9906830926c8b4957ad93d77ff4862a76c233f75b6"
+checksum = "70e669d06c8ac253a4d3b54af336cfd5813943c286cdfe7a41109b2d6696e133"
 dependencies = [
  "lazy_static",
  "regex",
@@ -514,9 +514,9 @@ checksum = "c111b5bd5695e56cffe5129854aa230b39c93a305372fdbb2668ca2394eea9f8"
 
 [[package]]
 name = "syn"
-version = "1.0.36"
+version = "1.0.38"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4cdb98bcb1f9d81d07b536179c269ea15999b5d14ea958196413869445bb5250"
+checksum = "e69abc24912995b3038597a7a593be5053eb0fb44f3cc5beec0deb421790c1f4"
 dependencies = [
  "proc-macro2",
  "quote",
