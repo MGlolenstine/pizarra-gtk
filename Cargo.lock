@@ -427,14 +427,14 @@ dependencies = [
  "gio",
  "glib",
  "gtk",
- "pizarra 0.7.2",
+ "pizarra 0.7.3",
 ]
 
 [[package]]
 name = "pizarra"
-version = "0.7.2"
+version = "0.7.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "70e669d06c8ac253a4d3b54af336cfd5813943c286cdfe7a41109b2d6696e133"
+checksum = "9e6f8b4e3ea120ce9b6dbe1db00a1122fbcf3a4bbe134434cd83836764b36c95"
 dependencies = [
  "lazy_static",
  "regex",
