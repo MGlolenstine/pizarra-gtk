@@ -19,4 +19,4 @@ ejecutar en una terminal dentro del directorio del proyecto:
 
 En este momento se ve así:
 
-![Vista de la quinta pre-versión de la pizarra](https://categulario.tk/pizarra.png)
+![Vista de la quinta pre-versión de la pizarra](https://categulario.tk/pizarra_demo_1.0.0.png)
