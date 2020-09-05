@@ -13,6 +13,7 @@ use gtk::{
 use gdk::{EventMask, EventType, ScrollDirection};
 use gtk::prelude::*;
 use gio::prelude::*;
+use gio::ApplicationFlags;
 use glib::clone;
 use cairo::{ImageSurface, Context};
 
@@ -571,7 +572,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 fn main() {
     let application = Application::new(
         Some("tk.categulario.pizarra"),
-        Default::default(),
+        ApplicationFlags::NON_UNIQUE,
     ).expect("failed to initialize GTK application");
 
     let arguments: Vec<_> = env::args().collect();
