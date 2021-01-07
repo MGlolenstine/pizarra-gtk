@@ -219,6 +219,32 @@ fn gtk_button(btn: u32) -> MouseButton {
     }
 }
 
+fn invalidate_and_redraw(controller: &App, surface: &RefCell<ImageSurface>, dw: &DrawingArea) {
+    let t = controller.get_transform();
+    let commands = controller.draw_commands_for_screen();
+    let p = controller.get_dimensions();
+
+    let width = p.x;
+    let height = p.y;
+
+    let new_surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
+    let context = cairo::Context::new(&new_surface);
+
+    let bgcolor = Color::black();
+
+    context.set_source_rgb(bgcolor.r, bgcolor.g, bgcolor.b);
+    context.paint();
+
+    // content
+    for cmd in commands {
+        cmd.draw(&context, t);
+    }
+
+    surface.replace(new_surface);
+
+    dw.queue_draw();
+}
+
 fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
     let layout = include_str!("../res/layout.glade");
@@ -226,6 +252,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     let controller = Rc::new(RefCell::new(App::new(Point::new(1.0, 1.0))));
     let window: ApplicationWindow = builder.get_object("main-window").expect("Couldn't get window");
     let header_bar: HeaderBar = builder.get_object("header-bar").expect("no header bar");
+    let surface = Rc::new(RefCell::new(ImageSurface::create(cairo::Format::ARgb32, 1, 1).unwrap()));
 
     window.set_application(Some(app));
 
@@ -289,25 +316,13 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     drawing_area.set_can_focus(true);
     drawing_area.add_events(event_mask);
 
-    drawing_area.connect_draw(clone!(@strong controller => move |_dw, ctx| {
-        let t;
-        let commands;
-
-        {
-            let controller = controller.borrow();
-            t = controller.get_transform();
-            commands = controller.draw_commands_for_screen();
-        }
-
-        let bgcolor = Color::black();
-
-
-        ctx.set_source_rgb(bgcolor.r, bgcolor.g, bgcolor.b);
+    drawing_area.connect_draw(clone!(@strong controller, @strong surface => move |_dw, ctx| {
+        ctx.set_source_surface(&surface.borrow(), 0.0, 0.0);
         ctx.paint();
 
-        // content
-        for cmd in commands {
-            cmd.draw(ctx, t);
+        if let Some(command) = controller.borrow().draw_commands_for_current_shape() {
+            let t = controller.borrow().get_transform();
+            command.draw(&ctx, t);
         }
 
         Inhibit(false)
@@ -335,20 +350,46 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         Inhibit(false)
     }));
 
-    drawing_area.connect_button_press_event(clone!(@strong controller => move |dw, event| {
+    drawing_area.connect_button_press_event(clone!(@strong controller, @strong surface => move |dw, event| {
         if let EventType::ButtonPress = event.get_event_type() {
-            if let ShouldRedraw::Yes = controller.borrow_mut().handle_mouse_button_pressed(gtk_button(event.get_button()), Point::from(event.get_position())) {
-                dw.queue_draw();
+            let redraw_hint = controller
+                .borrow_mut()
+                .handle_mouse_button_pressed(
+                    gtk_button(event.get_button()),
+                    Point::from(event.get_position())
+                );
+
+            match redraw_hint {
+                ShouldRedraw::All => {
+                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
+                }
+                ShouldRedraw::Shape => {
+                    dw.queue_draw();
+                }
+                _ => {}
             }
         }
 
         Inhibit(false)
     }));
 
-    drawing_area.connect_button_release_event(clone!(@strong controller, @strong header_bar => move |dw, event| {
+    drawing_area.connect_button_release_event(clone!(@strong controller, @strong surface, @strong header_bar => move |dw, event| {
         if let EventType::ButtonRelease = event.get_event_type() {
-            if let ShouldRedraw::Yes = controller.borrow_mut().handle_mouse_button_released(gtk_button(event.get_button()), Point::from(event.get_position())) {
-                dw.queue_draw();
+            let redraw_hint = controller
+                .borrow_mut()
+                .handle_mouse_button_released(
+                    gtk_button(event.get_button()),
+                    Point::from(event.get_position())
+                );
+
+            match redraw_hint {
+                ShouldRedraw::All => {
+                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
+                }
+                ShouldRedraw::Shape => {
+                    dw.queue_draw();
+                }
+                _ => {}
             }
         }
 
@@ -357,18 +398,29 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         Inhibit(false)
     }));
 
-    drawing_area.connect_motion_notify_event(clone!(@strong controller => move |dw, event| {
+    drawing_area.connect_motion_notify_event(clone!(@strong controller, @strong surface => move |dw, event| {
         let (x, y) = event.get_position();
 
-        if let ShouldRedraw::Yes = controller.borrow_mut().handle_mouse_move(Point::new(x, y)) {
-            dw.queue_draw();
+        let redraw_hint = controller
+            .borrow_mut()
+            .handle_mouse_move(Point::new(x, y));
+
+        match redraw_hint {
+            ShouldRedraw::All => {
+                invalidate_and_redraw(&controller.borrow(), &surface, dw);
+            }
+            ShouldRedraw::Shape => {
+                dw.queue_draw();
+            }
+            _ => {}
         }
 
         Inhibit(false)
     }));
 
-    drawing_area.connect_size_allocate(clone!(@strong controller => move |_dw, allocation| {
-        controller.borrow_mut().resize(Point::new(allocation.width as f64, allocation.height as f64))
+    drawing_area.connect_size_allocate(clone!(@strong controller, @strong surface => move |dw, allocation| {
+        controller.borrow_mut().resize(Point::new(allocation.width as f64, allocation.height as f64));
+        invalidate_and_redraw(&controller.borrow(), &surface, dw);
     }));
 
     let dwb = Rc::new(RefCell::new(drawing_area));
