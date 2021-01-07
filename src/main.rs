@@ -332,16 +332,24 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         Inhibit(false)
     });
 
-    drawing_area.connect_scroll_event(clone!(@strong controller => move |dw, event| {
+    drawing_area.connect_scroll_event(clone!(@strong controller, @strong surface => move |dw, event| {
         if let Some(direction) = event.get_scroll_direction() {
             match direction {
                 ScrollDirection::Up => {
-                    controller.borrow_mut().zoom_in();
-                    dw.queue_draw();
+                    controller.borrow_mut().handle_offset(Point::new(0.0, 10.0));
+                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 ScrollDirection::Down => {
-                    controller.borrow_mut().zoom_out();
-                    dw.queue_draw();
+                    controller.borrow_mut().handle_offset(Point::new(0.0, -10.0));
+                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
+                },
+                ScrollDirection::Left => {
+                    controller.borrow_mut().handle_offset(Point::new(10.0, 0.0));
+                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
+                },
+                ScrollDirection::Right => {
+                    controller.borrow_mut().handle_offset(Point::new(-10.0, 0.0));
+                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 _ => {},
             }
