@@ -7,6 +7,7 @@ fi
 rm -rf build
 mkdir -p build
 
+cargo build --release
 cp target/release/pizarra build/pizarra
 cp res/pizarra.svg build/pizarra.svg
 cp res/pizarra.desktop build/pizarra.desktop
