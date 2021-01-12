@@ -444,35 +444,35 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     // Zoom buttons
     let zoom_in_btn: Button = builder.get_object("zoom-in-btn").expect("No zoom in btn");
-    zoom_in_btn.connect_clicked(clone!(@strong controller, @strong dwb => move |_btn| {
+    zoom_in_btn.connect_clicked(clone!(@strong controller, @strong dwb, @strong surface => move |_btn| {
         controller.borrow_mut().zoom_in();
-        dwb.borrow().queue_draw();
+        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
     }));
 
     let zoom_out_btn: Button = builder.get_object("zoom-out-btn").expect("No zoom out btn");
-    zoom_out_btn.connect_clicked(clone!(@strong controller, @strong dwb => move |_btn| {
+    zoom_out_btn.connect_clicked(clone!(@strong controller, @strong dwb, @strong surface => move |_btn| {
         controller.borrow_mut().zoom_out();
-        dwb.borrow().queue_draw();
+        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
     }));
 
     let zoom_home_btn: Button = builder.get_object("zoom-home-btn").expect("No zoom home btn");
-    zoom_home_btn.connect_clicked(clone!(@strong controller, @strong dwb => move |_btn| {
+    zoom_home_btn.connect_clicked(clone!(@strong controller, @strong dwb, @strong surface => move |_btn| {
         controller.borrow_mut().go_home();
-        dwb.borrow().queue_draw();
+        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
     }));
 
     // Undo/Redo
     let undo_menu: MenuItem = builder.get_object("undo-btn").expect("No undo btn");
-    undo_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong dwb => move |_menu| {
+    undo_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong dwb, @strong surface => move |_menu| {
         controller.borrow_mut().undo();
-        dwb.borrow().queue_draw();
+        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
         set_subtitle(&header_bar, controller.borrow().get_save_status());
     }));
 
     let redo_menu: MenuItem = builder.get_object("redo-btn").expect("No reundo btn");
-    redo_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong dwb => move |_menu| {
+    redo_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong dwb, @strong surface => move |_menu| {
         controller.borrow_mut().redo();
-        dwb.borrow().queue_draw();
+        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
         set_subtitle(&header_bar, controller.borrow().get_save_status());
     }));
 
@@ -511,7 +511,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     let new_menu: MenuItem = builder.get_object("new-btn").expect("no new menu");
-    new_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window, @strong dwb => move |_menu| {
+    new_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move |_menu| {
         let save_status = controller.borrow().get_save_status().clone();
 
         match save_status {
@@ -522,7 +522,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                     Inhibit(false)
                 }, || {
                     controller.borrow_mut().reset();
-                    dwb.borrow().queue_draw();
+                    invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                     set_subtitle(&header_bar, controller.borrow().get_save_status());
                     Inhibit(false)
                 }, || {
@@ -533,12 +533,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_SINCE_LAST_TIME, || {
                     save_to_svg_logic(&mut controller.borrow_mut(), &path);
                     controller.borrow_mut().reset();
-                    dwb.borrow().queue_draw();
+                    invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                     set_subtitle(&header_bar, controller.borrow().get_save_status());
                     Inhibit(false)
                 }, || {
                     controller.borrow_mut().reset();
-                    dwb.borrow().queue_draw();
+                    invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                     set_subtitle(&header_bar, controller.borrow().get_save_status());
                     Inhibit(false)
                 }, || {
@@ -547,7 +547,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             },
             SaveStatus::Saved(_path) => {
                 controller.borrow_mut().reset();
-                dwb.borrow().queue_draw();
+                invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                 set_subtitle(&header_bar, controller.borrow().get_save_status());
             },
         }
