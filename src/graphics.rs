@@ -4,6 +4,7 @@ use cairo::{Context, LineCap, LineJoin};
 
 use pizarra::{
     draw_commands::DrawCommand, transform::Transform,
+    shape::path::PathCommand,
 };
 
 pub trait Drawable {
@@ -35,6 +36,36 @@ impl Drawable for DrawCommand {
 
                     ctx.stroke();
                 }
+            },
+            DrawCommand::Path {
+                color, line, thickness,
+            } => {
+                ctx.set_line_width(thickness * t.scale_factor());
+                ctx.set_source_rgb(color.r, color.g, color.b);
+                ctx.set_line_cap(LineCap::Round);
+                ctx.set_line_join(LineJoin::Round);
+
+                for point in line.iter() {
+                    if point.is_nan() {
+                        dbg!(point);
+                    }
+
+                    match point {
+                        PathCommand::MoveTo(p) => {
+                            let p = t.to_screen_coordinates(*p);
+                            ctx.move_to(p.x, p.y);
+                        },
+                        PathCommand::CurveTo(c) => {
+                            let pt1 = t.to_screen_coordinates(c.pt1);
+                            let pt2 = t.to_screen_coordinates(c.pt2);
+                            let to = t.to_screen_coordinates(c.to);
+
+                            ctx.curve_to(pt1.x, pt1.y, pt2.x, pt2.y, to.x, to.y);
+                        },
+                    }
+                }
+
+                ctx.stroke();
             },
             DrawCommand::Circle {
                 thickness, center, radius, color,

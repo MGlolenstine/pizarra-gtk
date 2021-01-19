@@ -597,7 +597,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     // Change shape
     let set_pen_menu: MenuItem = builder.get_object("tool-pen-btn").expect("no pen menu");
     set_pen_menu.connect_activate(clone!(@strong controller => move |_menu| {
-        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Line));
+        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Path));
     }));
 
     let set_rectangle_menu: MenuItem = builder.get_object("tool-rect-btn").expect("no ractangle menu");
