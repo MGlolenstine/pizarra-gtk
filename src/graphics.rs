@@ -23,10 +23,6 @@ impl Drawable for DrawCommand {
                 ctx.set_line_join(LineJoin::Round);
 
                 for point in commands.iter() {
-                    if point.is_nan() {
-                        dbg!(point);
-                    }
-
                     match point {
                         PathCommand::MoveTo(p) => {
                             let p = t.to_screen_coordinates(*p);
