@@ -12,7 +12,7 @@
         <property name="label" translatable="yes">_Archivo</property>
         <property name="use-underline">True</property>
         <child type="submenu">
-          <object class="GtkMenu">
+          <object class="GtkMenu" id="file-actions-menu">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
@@ -92,7 +92,7 @@
         <property name="label" translatable="yes">_Editar</property>
         <property name="use-underline">True</property>
         <child type="submenu">
-          <object class="GtkMenu">
+          <object class="GtkMenu" id="edit-actions-menu">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
@@ -124,7 +124,7 @@
         <property name="label" translatable="yes">_Ver</property>
         <property name="use-underline">True</property>
         <child type="submenu">
-          <object class="GtkMenu">
+          <object class="GtkMenu" id="view-actions-menu">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
@@ -147,11 +147,11 @@
         <property name="label" translatable="yes">Ay_uda</property>
         <property name="use-underline">True</property>
         <child type="submenu">
-          <object class="GtkMenu">
+          <object class="GtkMenu" id="help-actions-menu">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
-              <object class="GtkMenuItem">
+              <object class="GtkMenuItem" id="about-btn">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label">Acerca de</property>
@@ -279,10 +279,10 @@
           </object>
         </child>
         <child>
-          <object class="GtkButtonBox">
+          <object class="GtkButtonBox" id="zoom-btn-box">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
-            <property name="layout-style">start</property>
+            <property name="layout-style">expand</property>
             <child>
               <object class="GtkButton" id="zoom-in-btn">
                 <property name="visible">True</property>
@@ -336,7 +336,7 @@ Todo se hará más pequeño</property>
           </packing>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="actions-menu-btn">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
@@ -358,7 +358,7 @@ Todo se hará más pequeño</property>
           </packing>
         </child>
         <child>
-          <object class="GtkMenuButton">
+          <object class="GtkMenuButton" id="tool-menu-btn">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="focus-on-click">False</property>
