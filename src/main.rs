@@ -9,7 +9,7 @@ use gtk::{
     Application, ApplicationWindow, DrawingArea, Builder, ColorButton,
     Button, MenuItem, FileChooserNative, FileChooserAction, ResponseType,
     HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
-    ScaleButton,
+    ScaleButton, AboutDialog,
 };
 use gdk::{EventMask, EventType, ScrollDirection};
 use gtk::prelude::*;
@@ -254,6 +254,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     let window: ApplicationWindow = builder.get_object("main-window").expect("Couldn't get window");
     let header_bar: HeaderBar = builder.get_object("header-bar").expect("no header bar");
     let surface = Rc::new(RefCell::new(ImageSurface::create(cairo::Format::ARgb32, 1, 1).unwrap()));
+    let about_dialog: AboutDialog = builder.get_object("about-dialog").unwrap();
 
     window.set_application(Some(app));
 
@@ -636,6 +637,14 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     set_eraser_menu.connect_activate(clone!(@strong controller => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Eraser);
     }));
+
+    let about_btn: MenuItem = builder.get_object("about-btn").unwrap();
+    about_btn.connect_activate(move |_| {
+        let response = about_dialog.run();
+        if response == ResponseType::DeleteEvent || response == ResponseType::Cancel {
+            about_dialog.hide();
+        }
+    });
 
     // Show
     window.show_all();
