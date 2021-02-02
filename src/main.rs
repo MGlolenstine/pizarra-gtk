@@ -8,7 +8,8 @@ use std::env;
 use gtk::{
     Application, ApplicationWindow, DrawingArea, Builder, ColorButton,
     Button, MenuItem, FileChooserNative, FileChooserAction, ResponseType,
-    HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window
+    HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
+    ScaleButton,
 };
 use gdk::{EventMask, EventType, ScrollDirection};
 use gtk::prelude::*;
@@ -459,6 +460,17 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     zoom_home_btn.connect_clicked(clone!(@strong controller, @strong dwb, @strong surface => move |_btn| {
         controller.borrow_mut().go_home();
         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
+    }));
+
+    // Thickness and alpha
+    let thickness_btn: ScaleButton = builder.get_object("thickness-scale").unwrap();
+    thickness_btn.connect_value_changed(clone!(@strong controller => move |_btn, value| {
+        controller.borrow_mut().set_stroke(value);
+    }));
+
+    let alpha_btn: ScaleButton = builder.get_object("alpha-scale").unwrap();
+    alpha_btn.connect_value_changed(clone!(@strong controller => move |_btn, value| {
+        controller.borrow_mut().set_alpha(value);
     }));
 
     // Undo/Redo

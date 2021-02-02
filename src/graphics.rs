@@ -18,7 +18,7 @@ impl Drawable for DrawCommand {
                 color, commands, thickness,
             } => {
                 ctx.set_line_width(thickness * t.scale_factor());
-                ctx.set_source_rgb(color.r, color.g, color.b);
+                ctx.set_source_rgba(color.r, color.g, color.b, color.a);
                 ctx.set_line_cap(LineCap::Round);
                 ctx.set_line_join(LineJoin::Round);
 
