@@ -248,8 +248,7 @@ fn invalidate_and_redraw(controller: &App, surface: &RefCell<ImageSurface>, dw: 
 
 fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
-    let layout = include_str!("../res/layout.glade");
-    let builder = Builder::new_from_string(layout);
+    let builder = Builder::from_resource("/tk/categulario/pizarra/pizarra.glade");
     let controller = Rc::new(RefCell::new(App::new(Point::new(1.0, 1.0))));
     let window: ApplicationWindow = builder.get_object("main-window").expect("Couldn't get window");
     let header_bar: HeaderBar = builder.get_object("header-bar").expect("no header bar");
@@ -658,7 +657,13 @@ fn main() {
 
     let arguments: Vec<_> = env::args().collect();
 
-    application.connect_activate(move |app| init(app, arguments.get(1).map(|f| f.into())));
+    application.connect_activate(move |app| {
+        let resource_bytes = include_bytes!(concat!(env!("OUT_DIR"), "/res/resources.gresource"));
+        let resource_data = glib::Bytes::from(&resource_bytes[..]);
+        gio::resources_register(&gio::Resource::from_data(&resource_data).unwrap());
+
+        init(app, arguments.get(1).map(|f| f.into()));
+    });
 
     application.run(&[]);
 }
