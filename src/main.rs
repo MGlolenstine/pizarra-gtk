@@ -662,6 +662,11 @@ fn main() {
         let resource_data = glib::Bytes::from(&resource_bytes[..]);
         gio::resources_register(&gio::Resource::from_data(&resource_data).unwrap());
 
+        let icon_theme = gtk::IconTheme::get_default().expect("failed to get default icon theme");
+        icon_theme.add_resource_path("/tk/categulario/pizarra/icons");
+
+        Window::set_default_icon_name("tk.categulario.pizarra");
+
         init(app, arguments.get(1).map(|f| f.into()));
     });
 

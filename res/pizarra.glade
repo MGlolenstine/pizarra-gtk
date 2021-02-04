@@ -205,11 +205,6 @@ along with gpl.  If not, see <http://www.gnu.org/licenses/>.
     <property name="can-focus">False</property>
     <property name="icon-name">zoom-original</property>
   </object>
-  <object class="GtkImage" id="image-alpha">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="resource">/tk/categulario/pizarra/alpha.svg</property>
-  </object>
   <object class="GtkAdjustment" id="thickness-adjustment">
     <property name="lower">3</property>
     <property name="upper">51</property>
@@ -408,7 +403,7 @@ Todo se hará más pequeño</property>
               <object class="GtkImage">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="resource">/tk/categulario/pizarra/line.svg</property>
+                <property name="icon-name">line</property>
               </object>
             </child>
           </object>
@@ -424,7 +419,7 @@ Todo se hará más pequeño</property>
             <property name="receives-default">True</property>
             <property name="relief">none</property>
             <property name="adjustment">thickness-adjustment</property>
-            <property name="icons">contact-new</property>
+            <property name="icons">thickness</property>
             <child internal-child="plus_button">
               <object class="GtkButton">
                 <property name="can-focus">True</property>
@@ -457,7 +452,7 @@ Todo se hará más pequeño</property>
             <property name="relief">none</property>
             <property name="orientation">vertical</property>
             <property name="adjustment">alpha-adjustment</property>
-            <property name="icons">contact-new</property>
+            <property name="icons">alpha</property>
             <child internal-child="plus_button">
               <object class="GtkButton">
                 <property name="can-focus">True</property>
@@ -496,7 +491,7 @@ Todo se hará más pequeño</property>
     <property name="website">https://pizarra.categulario.tk</property>
     <property name="website-label" translatable="yes">pizarra.categulario.tk</property>
     <property name="authors">Abraham Toriz</property>
-    <property name="logo-icon-name">applications-multimedia</property>
+    <property name="logo-icon-name">tk.categulario.pizarra</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox">

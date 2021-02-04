@@ -10,17 +10,18 @@ const XML_FOOTER: &str = r#"    </gresource>
 </gresources>
 "#;
 
-const RESOURCES: [&str; 10] = [
-    "alpha.svg",
-    "ellipse.svg",
-    "eraser.svg",
-    "line.svg",
+const RESOURCES: [&str; 9] = [
     "pizarra.glade",
-    "pizarra.svg",
-    "polygon.svg",
-    "rectangle.svg",
-    "thickness.svg",
-    "pizarra.glade",
+
+    "icons/scalable/apps/tk.categulario.pizarra.svg",
+
+    "icons/scalable/actions/alpha.svg",
+    "icons/scalable/actions/ellipse.svg",
+    "icons/scalable/actions/eraser.svg",
+    "icons/scalable/actions/line.svg",
+    "icons/scalable/actions/polygon.svg",
+    "icons/scalable/actions/rectangle.svg",
+    "icons/scalable/actions/thickness.svg",
 ];
 
 fn main() {
@@ -30,13 +31,12 @@ fn main() {
     let mut resources = PathBuf::from(&out_dir);
     resources.push("res");
 
-    fs::create_dir_all(resources.clone()).unwrap();
-
     for filename in RESOURCES.iter() {
         let mut filewithpath = PathBuf::from("res/");
         filewithpath.push(filename);
         let mut destfile = resources.clone();
         destfile.push(filename);
+        fs::create_dir_all(destfile.parent().unwrap()).unwrap();
         fs::copy(filewithpath, destfile).unwrap();
     }
 
