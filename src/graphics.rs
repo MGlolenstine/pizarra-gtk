@@ -49,7 +49,7 @@ impl Drawable for DrawCommand {
             } => {
                 let c = t.to_screen_coordinates(center);
 
-                ctx.set_source_rgb(color.r, color.g, color.b);
+                ctx.set_source_rgba(color.r, color.g, color.b, color.a);
                 ctx.arc(c.x, c.y, radius * t.scale_factor(), 0.0, 2.0*PI);
                 ctx.set_line_width(thickness * t.scale_factor());
                 ctx.stroke();
@@ -67,7 +67,7 @@ impl Drawable for DrawCommand {
                 }
 
                 ctx.set_line_width(thickness * t.scale_factor());
-                ctx.set_source_rgb(color.r, color.g, color.b);
+                ctx.set_source_rgba(color.r, color.g, color.b, color.a);
 
                 ctx.save();
                 ctx.translate(min.x + dimensions.x / 2., min.y + dimensions.y / 2.);
