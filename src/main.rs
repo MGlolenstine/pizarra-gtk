@@ -113,7 +113,7 @@ fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCell<A
     Ok(())
 }
 
-fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<App>>) {
+fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<App>>, surface: Rc<RefCell<ImageSurface>>, dwb: Rc<RefCell<DrawingArea>>) {
     let open_file_chooser = FileChooserNative::new(Some("Abrir"), Some(window), FileChooserAction::Open, Some("Abrir"), Some("Cancelar"));
     let res = open_file_chooser.run();
 
@@ -127,6 +127,7 @@ fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc
                         let ans = { controller.borrow_mut().open(&svg) };
                         if let Ok(_) = ans {
                             controller.borrow_mut().set_saved(filename);
+                            invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                             set_subtitle(&header_bar, controller.borrow().get_save_status());
                         } else {
                             dialog(window, "No pudimos interpretar el formato de este archivo :(", MessageType::Error);
@@ -490,27 +491,27 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     // File management
     let open_menu: MenuItem = builder.get_object("open-btn").expect("no open menu");
-    open_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window => move |_menu| {
+    open_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move |_menu| {
         let save_status = controller.borrow().get_save_status().clone();
 
         match save_status {
-            SaveStatus::NewAndEmpty => open_logic(&window, &header_bar, controller.clone()),
+            SaveStatus::NewAndEmpty => open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone()),
             SaveStatus::NewAndChanged => {
-                yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, clone!(@strong controller, @strong header_bar, @strong window => move || {
+                yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
                     save_as_logic(&window, &header_bar, controller.clone());
-                    open_logic(&window, &header_bar, controller.clone());
+                    open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
                     Inhibit(false)
-                }), clone!(@strong controller, @strong header_bar, @strong window => move || {
-                    open_logic(&window, &header_bar, controller.clone());
+                }), clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
+                    open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
                     Inhibit(false)
                 }), || {
                     Inhibit(false)
                 });
             },
             SaveStatus::Unsaved(path) => {
-                yes_no_cancel_dialog(&window, UNSAVED_CHANGES_SINCE_LAST_TIME, clone!(@strong controller, @strong header_bar, @strong window => move || {
+                yes_no_cancel_dialog(&window, UNSAVED_CHANGES_SINCE_LAST_TIME, clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
                     save_to_svg_logic(&mut controller.borrow_mut(), &path);
-                    open_logic(&window, &header_bar, controller.clone());
+                    open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
                     Inhibit(false)
                 }), || {
                     Inhibit(false)
@@ -518,7 +519,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                     Inhibit(false)
                 });
             },
-            SaveStatus::Saved(_path) => open_logic(&window, &header_bar, controller.clone()),
+            SaveStatus::Saved(_path) => open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone()),
         }
     }));
 
