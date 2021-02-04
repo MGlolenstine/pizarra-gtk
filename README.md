@@ -32,3 +32,14 @@ Podría ser que estos dos comandos funcionen:
 
     brew install gtk+3
     cargo run
+
+## Checklist antes de sacar un release
+
+* se puede dibugar con todas las herramientas
+* se puede hacer zoom para adentro y afuera, y regresar al inicio
+* se puede cambiar el alpha y el grosor
+* se pueden borrar
+* ctrl+z, ctrl+shift+z
+* se puede guardar
+* se puede abrir el archivo guardado
+* se puede exportar
