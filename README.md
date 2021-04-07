@@ -35,16 +35,16 @@ Podría ser que estos dos comandos funcionen:
 
 ### En windows
 
-    git clone https://github.com/wingtk/gvsbuild.git C:\gtk-build\github\gvsbuild
-    cd C:\gtk-build\github\gvsbuild; python .\build.py build -p=x64 --vs-ver=16 --msys-dir=C:\msys64 -k --enable-gi --py-wheel --py-egg gtk3 gdk-pixbuf gtksourceview3
-    ${Env:GTKSOURCEVIEW_3.0_NO_PKG_CONFIG}=1; ${Env:SYSTEM_DEPS_GTKSOURCEVIEW_3.0_LIB}="gtksourceview-3.0"; cargo build
+    git clone https://github.com/wingtk/gvsbuild.git C:\gtk-build\gvsbuild
+    cd C:\gtk-build\gvsbuild; python .\build.py build -p=x64 --vs-ver=16 --msys-dir=C:\msys64 -k --enable-gi --py-wheel --py-egg gtk3 gdk-pixbuf
+    cargo build
 
 #### Instalador
 
 Hacer primero lo de arriba, luego:
 
     cargo install cargo-wix
-    ${Env:GTKSOURCEVIEW_3.0_NO_PKG_CONFIG}=1; ${Env:SYSTEM_DEPS_GTKSOURCEVIEW_3.0_LIB}="gtksourceview-3.0"; cargo wix -v
+    cargo wix -v
 
 ## Checklist antes de sacar un release
 
