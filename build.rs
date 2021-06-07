@@ -66,7 +66,7 @@ fn main() {
 
     let mut cmd = Command::new(if let Ok(path) = env::var("GLIB_COMPILE_RESOURCES") {
         path
-    } else if cfg!(target_os = "window") {
+    } else if cfg!(target_os = "windows") {
         "glib-compile-resources.exe".to_owned()
     } else {
         "glib-compile-resources".to_owned()
@@ -80,7 +80,7 @@ fn main() {
     #[cfg(windows)]
     {
         let mut res = winres::WindowsResource::new();
-        res.set_icon("wix/pizarra.ico");
+        res.set_icon("res/pizarra128.ico");
         res.compile().unwrap();
     }
 }
