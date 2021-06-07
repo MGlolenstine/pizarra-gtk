@@ -35,16 +35,7 @@ Podría ser que estos dos comandos funcionen:
 
 ### En windows
 
-    git clone https://github.com/wingtk/gvsbuild.git C:\gtk-build\gvsbuild
-    cd C:\gtk-build\gvsbuild; python .\build.py build -p=x64 --vs-ver=16 --msys-dir=C:\msys64 -k --enable-gi --py-wheel --py-egg gtk3 gdk-pixbuf
-    cargo build
-
-#### Instalador
-
-Hacer primero lo de arriba, luego:
-
-    cargo install cargo-wix
-    cargo wix -v
+[Escribí una entrada en mi blog entera sobre cómo hacer esto](https://blog.categulario.tk/como-compilar-la-pizarra-en-windows.html)
 
 ## Checklist antes de sacar un release
 
