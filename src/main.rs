@@ -612,37 +612,37 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     let set_pen_menu: MenuItem = builder.get_object("tool-pen-btn").expect("no pen menu");
     set_pen_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Path));
-        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/scalable/actions/line.svg")));
+        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/line.svg")));
     }));
 
     let set_rectangle_menu: MenuItem = builder.get_object("tool-rect-btn").expect("no ractangle menu");
     set_rectangle_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Rectangle));
-        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/scalable/actions/rectangle.svg")));
+        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/rectangle.svg")));
     }));
 
     let set_polygon_menu: MenuItem = builder.get_object("tool-polygon-btn").expect("no polygon menu");
     set_polygon_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Polygon));
-        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/scalable/actions/polygon.svg")));
+        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/polygon.svg")));
     }));
 
     let set_circle_menu: MenuItem = builder.get_object("tool-circle-btn").expect("no circle menu");
     set_circle_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Circle));
-        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/scalable/actions/ellipse.svg")));
+        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/ellipse.svg")));
     }));
 
     let set_ellipse_menu: MenuItem = builder.get_object("tool-ellipse-btn").expect("no ellipse menu");
     set_ellipse_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Ellipse));
-        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/scalable/actions/ellipse.svg")));
+        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/ellipse.svg")));
     }));
 
     let set_eraser_menu: MenuItem = builder.get_object("tool-eraser-btn").expect("no eraser menu");
     set_eraser_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Eraser);
-        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/scalable/actions/eraser.svg")));
+        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/eraser.svg")));
     }));
 
     let about_btn: MenuItem = builder.get_object("about-btn").unwrap();

@@ -13,15 +13,15 @@ const XML_FOOTER: &str = r#"    </gresource>
 const RESOURCES: [&str; 9] = [
     "pizarra.glade",
 
-    "icons/scalable/apps/tk.categulario.pizarra.svg",
+    "icons/tk.categulario.pizarra.svg",
 
-    "icons/scalable/actions/alpha.svg",
-    "icons/scalable/actions/ellipse.svg",
-    "icons/scalable/actions/eraser.svg",
-    "icons/scalable/actions/line.svg",
-    "icons/scalable/actions/polygon.svg",
-    "icons/scalable/actions/rectangle.svg",
-    "icons/scalable/actions/thickness.svg",
+    "icons/alpha.svg",
+    "icons/ellipse.svg",
+    "icons/eraser.svg",
+    "icons/line.svg",
+    "icons/polygon.svg",
+    "icons/rectangle.svg",
+    "icons/thickness.svg",
 ];
 
 fn main() {
