@@ -22,11 +22,11 @@ destination for 32-bit versus 64-bit installers. Removal of these lines will
 cause installation errors.
 -->
 <?if $(var.Platform) = x64 ?>
-<?define Win64 = "yes" ?>
-<?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
+  <?define Win64 = "yes" ?>
+  <?define PlatformProgramFilesFolder = "ProgramFiles64Folder" ?>
 <?else ?>
-<?define Win64 = "no" ?>
-<?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
+  <?define Win64 = "no" ?>
+  <?define PlatformProgramFilesFolder = "ProgramFilesFolder" ?>
 <?endif ?>
 
 <Wix xmlns='http://schemas.microsoft.com/wix/2006/wi'>
@@ -79,7 +79,7 @@ cause installation errors.
           <Directory Id='Bin' Name='bin'>
             <Component Id='binary0' Guid='*' Win64='$(var.Win64)'>
               <File
-                Id='binary0'
+                Id='binary0file'
                 Name='pizarra.exe'
                 DiskId='1'
                 Source='target\$(var.Profile)\pizarra.exe'
@@ -290,7 +290,7 @@ cause installation errors.
 
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationShortcut" Guid="D8E06AF7-0D37-45EF-870A-FB044256F7DA">
-        <Shortcut Id="ApplicationStartMenuShortcut" Name="Pizarra" Description="A scriptable scratchpad for developers" Target="[#binary0]" WorkingDirectory="APPLICATIONFOLDER" Icon="AppIcon">
+        <Shortcut Id="ApplicationStartMenuShortcut" Name="Pizarra" Description="Tu pizarrón virtual de confianza" Target="[#binary0file]" WorkingDirectory="APPLICATIONFOLDER" Icon="AppIcon">
           <Icon Id="AppIcon" SourceFile="target\$(var.Profile)\pizarra.exe" />
         </Shortcut>
         <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
@@ -390,7 +390,7 @@ cause installation errors.
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
     <UI>
-      <UIRef Id='WixUI_FeatureTree'/>
+      <UIRef Id='WixUI_Minimal'/>
         <!--
           Disabling the EULA dialog in the installer is a two step process:
 
@@ -400,6 +400,10 @@ cause installation errors.
         -->
         <!--<Publish Dialog='WelcomeDlg' Control='Next' Event='NewDialog' Value='CustomizeDlg' Order='99'>1</Publish>-->
         <!--<Publish Dialog='CustomizeDlg' Control='Back' Event='NewDialog' Value='WelcomeDlg' Order='99'>1</Publish>-->
+      <Publish Dialog="ExitDialog"
+        Control="Finish"
+        Event="DoAction"
+        Value="LaunchApplication">WIXUI_EXITDIALOGOPTIONALCHECKBOX = 1 and NOT Installed</Publish>
     </UI>
 
     <!--
@@ -428,5 +432,9 @@ cause installation errors.
       The dialog BMP dimensions are 493 x 312 pixels.
     -->
     <!--<WixVariable Id='WixUIDialogBmp' Value='wix\Dialog.bmp'/>-->
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Iniciar la pizarra" />
+
+    <Property Id="WixShellExecTarget" Value="[#binary0file]" />
+    <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
   </Product>
 </Wix>
