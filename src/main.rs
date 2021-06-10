@@ -1,3 +1,4 @@
+#![cfg_attr(release, windows_subsystem = "windows")]
 use std::rc::Rc;
 use std::cell::RefCell;
 use std::fs::File;
