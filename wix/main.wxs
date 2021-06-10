@@ -77,16 +77,6 @@ cause installation errors.
           </Component>
 
           <Directory Id='Bin' Name='bin'>
-            <Component Id='Path' Guid='89464E1C-027B-4134-A140-36EAF697FFF8' Win64='$(var.Win64)' KeyPath='yes'>
-              <Environment
-                Id='PATH'
-                Name='PATH'
-                Value='[Bin]'
-                Permanent='no'
-                Part='last'
-                Action='set'
-                System='yes'/>
-            </Component>
             <Component Id='binary0' Guid='*' Win64='$(var.Win64)'>
               <File
                 Id='binary0'
@@ -378,15 +368,6 @@ cause installation errors.
       <ComponentRef Id='theme4'/>
       <ComponentRef Id='theme5'/>
       <ComponentRef Id='theme6'/>
-
-      <Feature
-        Id='Environment'
-        Title='PATH Environment Variable'
-        Description='Add the install location of the [ProductName] executable to the PATH system environment variable. This allows the [ProductName] executable to be called from any location.'
-        Level='1'
-        Absent='allow'>
-        <ComponentRef Id='Path'/>
-      </Feature>
     </Feature>
 
     <SetProperty Id='ARPINSTALLLOCATION' Value='[APPLICATIONFOLDER]' After='CostFinalize'/>
