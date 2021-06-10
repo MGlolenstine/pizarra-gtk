@@ -173,6 +173,9 @@ cause installation errors.
             <Component Id='dll39' Guid='*' Win64='$(var.Win64)'>
               <File Id='dll39file' Name='harfbuzz.dll' DiskId='1' Source='C:\gtk-build\gtk\x64\release\bin\harfbuzz.dll' KeyPath='yes'/>
             </Component>
+            <Component Id='dll40' Guid='*' Win64='$(var.Win64)'>
+              <File Id='dll40file' Name='rsvg-2.0-vs16.dll' DiskId='1' Source='C:\gtk-build\gtk\x64\release\bin\rsvg-2.0-vs16.dll' KeyPath='yes'/>
+            </Component>
           </Directory>
 
           <Directory Id='Etc' Name='etc'>
@@ -342,6 +345,7 @@ cause installation errors.
       <ComponentRef Id='dll36'/>
       <ComponentRef Id='dll38'/>
       <ComponentRef Id='dll39'/>
+      <ComponentRef Id='dll40'/>
 
       <ComponentRef Id='Settings'/>
 
