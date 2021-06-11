@@ -302,6 +302,12 @@ cause installation errors.
                     <Component Id='theme6' Guid='*' Win64='$(var.Win64)'>
                       <File Id='theme6File' Name='minimize-unfocused.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/minimize-unfocused.png' KeyPath='yes'/>
                     </Component>
+                    <Component Id='theme7' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='theme7File' Name='slider-vert.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/slider-vert.png' KeyPath='yes'/>
+                    </Component>
+                    <Component Id='theme8' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='theme8File' Name='slider-vert-hover.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/slider-vert-hover.png' KeyPath='yes'/>
+                    </Component>
                   </Directory>
                 </Directory>
               </Directory>
@@ -427,6 +433,8 @@ cause installation errors.
       <ComponentRef Id='theme4'/>
       <ComponentRef Id='theme5'/>
       <ComponentRef Id='theme6'/>
+      <ComponentRef Id='theme7'/>
+      <ComponentRef Id='theme8'/>
     </Feature>
 
     <SetProperty Id='ARPINSTALLLOCATION' Value='[APPLICATIONFOLDER]' After='CostFinalize'/>
