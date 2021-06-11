@@ -278,6 +278,19 @@ cause installation errors.
               </Directory>
             </Directory>
 
+            <Directory Id='Glib' Name='glib-2.0'>
+              <Directory Id='schemas' Name='schemas'>
+                <Component Id='GlibSchema' Guid='*' Win64='$(var.Win64)'>
+                  <File Id='GlibSchemaFile' Name='gschemas.compiled' DiskId='1' Source='C:\gtk-build\gtk\x64\release\share\glib-2.0\schemas\gschemas.compiled' KeyPath='yes'/>
+                </Component>
+                <Component Id='ColorChooserSchema' Guid='*' Win64='$(var.Win64)'>
+                  <File Id='ColorChooserSchemaFile' Name='org.gtk.Settings.ColorChooser.gschema.xml' DiskId='1' Source='C:\gtk-build\gtk\x64\release\share\glib-2.0\schemas\org.gtk.Settings.ColorChooser.gschema.xml' KeyPath='yes'/>
+                </Component>
+                <Component Id='FileChooserSchema' Guid='*' Win64='$(var.Win64)'>
+                  <File Id='FileChooserSchemaFile' Name='org.gtk.Settings.FileChooser.gschema.xml' DiskId='1' Source='C:\gtk-build\gtk\x64\release\share\glib-2.0\schemas\org.gtk.Settings.FileChooser.gschema.xml' KeyPath='yes'/>
+                </Component>
+              </Directory>
+            </Directory>
           </Directory>
 
         </Directory>
@@ -364,6 +377,9 @@ cause installation errors.
       <ComponentRef Id='ThemeLicense'/>
       <ComponentRef Id='SettingsTheme'/>
       <ComponentRef Id='gtkcss'/>
+      <ComponentRef Id='GlibSchema'/>
+      <ComponentRef Id='ColorChooserSchema'/>
+      <ComponentRef Id='FileChooserSchema'/>
 
       <ComponentRef Id='theme0'/>
       <ComponentRef Id='theme1'/>
