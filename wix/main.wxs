@@ -176,6 +176,9 @@ cause installation errors.
             <Component Id='dll40' Guid='*' Win64='$(var.Win64)'>
               <File Id='dll40file' Name='rsvg-2.0-vs16.dll' DiskId='1' Source='C:\gtk-build\gtk\x64\release\bin\rsvg-2.0-vs16.dll' KeyPath='yes'/>
             </Component>
+            <Component Id='gspawnexe' Guid='*' Win64='$(var.Win64)'>
+              <File Id='gspawnexefile' Name='gspawn-win64-helper-console.exe' DiskId='1' Source='C:\gtk-build\gtk\x64\release\bin\gspawn-win64-helper-console.exe' KeyPath='yes'/>
+            </Component>
           </Directory>
 
           <Directory Id='Etc' Name='etc'>
@@ -216,6 +219,9 @@ cause installation errors.
                     <Component Id='icon4' Guid='*' Win64='$(var.Win64)'>
                       <File Id='icon4file' Name='window-minimize-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\ui\window-minimize-symbolic.svg' KeyPath='yes'/>
                     </Component>
+                    <Component Id='icon12' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon12' Name='pan-end-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\ui\pan-end-symbolic.svg' KeyPath='yes'/>
+                    </Component>
                   </Directory>
                   <Directory Id='Actions' Name='actions'>
                     <Component Id='icon1' Guid='*' Win64='$(var.Win64)'>
@@ -226,6 +232,29 @@ cause installation errors.
                     </Component>
                     <Component Id='icon5' Guid='*' Win64='$(var.Win64)'>
                       <File Id='icon5' Name='edit-clear-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\actions\edit-clear-symbolic.svg' KeyPath='yes'/>
+                    </Component>
+                    <Component Id='icon6' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon6' Name='zoom-in-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\actions\zoom-in-symbolic.svg' KeyPath='yes'/>
+                    </Component>
+                    <Component Id='icon7' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon7' Name='zoom-original-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\actions\zoom-original-symbolic.svg' KeyPath='yes'/>
+                    </Component>
+                    <Component Id='icon8' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon8' Name='zoom-out-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\actions\zoom-out-symbolic.svg' KeyPath='yes'/>
+                    </Component>
+                    <Component Id='icon9' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon9' Name='object-select-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\actions\object-select-symbolic.svg' KeyPath='yes'/>
+                    </Component>
+                    <Component Id='icon10' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon10' Name='list-add-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\actions\list-add-symbolic.svg' KeyPath='yes'/>
+                    </Component>
+                    <Component Id='icon11' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon11' Name='list-remove-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\actions\list-remove-symbolic.svg' KeyPath='yes'/>
+                    </Component>
+                  </Directory>
+                  <Directory Id='Places' Name='places'>
+                    <Component Id='icon13' Guid='*' Win64='$(var.Win64)'>
+                      <File Id='icon13' Name='user-home-symbolic.svg' DiskId='1' Source='C:\msys64\mingw64\share\icons\Adwaita\scalable\places\user-home-symbolic.svg' KeyPath='yes'/>
                     </Component>
                   </Directory>
                 </Directory>
@@ -340,7 +369,6 @@ cause installation errors.
       <ComponentRef Id='dll10'/>
       <ComponentRef Id='dll13'/>
       <ComponentRef Id='dll15'/>
-      <ComponentRef Id='exebus'/>
       <ComponentRef Id='dll18'/>
       <ComponentRef Id='dll19'/>
       <ComponentRef Id='dll22'/>
@@ -360,6 +388,9 @@ cause installation errors.
       <ComponentRef Id='dll39'/>
       <ComponentRef Id='dll40'/>
 
+      <ComponentRef Id='exebus'/>
+      <ComponentRef Id='gspawnexe'/>
+
       <ComponentRef Id='Settings'/>
 
       <ComponentRef Id='loadercache'/>
@@ -371,6 +402,14 @@ cause installation errors.
       <ComponentRef Id='icon3'/>
       <ComponentRef Id='icon4'/>
       <ComponentRef Id='icon5'/>
+      <ComponentRef Id='icon6'/>
+      <ComponentRef Id='icon7'/>
+      <ComponentRef Id='icon8'/>
+      <ComponentRef Id='icon9'/>
+      <ComponentRef Id='icon10'/>
+      <ComponentRef Id='icon11'/>
+      <ComponentRef Id='icon12'/>
+      <ComponentRef Id='icon13'/>
 
       <ComponentRef Id='idx0'/>
 
@@ -449,6 +488,7 @@ cause installation errors.
     -->
     <!--<WixVariable Id='WixUIDialogBmp' Value='wix\Dialog.bmp'/>-->
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Iniciar la pizarra" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
 
     <Property Id="WixShellExecTarget" Value="[#binary0file]" />
     <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
