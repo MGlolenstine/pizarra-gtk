@@ -24,7 +24,7 @@ use pizarra::{
         ShouldRedraw, SaveStatus, MouseButton, SelectedTool,
     }, color::Color, transform::Transform, shape::ShapeType,
 };
-use pizarra::point::Point;
+use pizarra::point::Vec2DScreen;
 
 mod graphics;
 
@@ -69,8 +69,11 @@ fn ensure_extension(filename: &Path, extension: &str) -> PathBuf {
     }
 }
 
-fn render_drawing(controller: &App, ctx: &Context, topleft: Point) {
-    let t = Transform::new(topleft - Point::new(RENDER_PADDING, RENDER_PADDING), 1.0);
+fn render_drawing(controller: &App, ctx: &Context, topleft: Vec2DScreen) {
+    let t = Transform::new(
+        (topleft - Vec2DScreen::new(RENDER_PADDING, RENDER_PADDING)).into(),
+        1.0,
+    );
     let bgcolor = controller.bgcolor();
 
     ctx.set_source_rgb(bgcolor.r, bgcolor.g, bgcolor.b);
@@ -160,7 +163,7 @@ fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<App>>) {
                     let surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
                     let context = cairo::Context::new(&surface);
 
-                    render_drawing(&controller.borrow(), &context, topleft);
+                    render_drawing(&controller.borrow(), &context, topleft.to_vec2d().into());
 
                     surface.write_to_png(&mut File::create(pngfilename).unwrap()).unwrap();
                 }
@@ -251,7 +254,7 @@ fn invalidate_and_redraw(controller: &App, surface: &RefCell<ImageSurface>, dw: 
 fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
     let builder = Builder::from_resource("/tk/categulario/pizarra/pizarra.glade");
-    let controller = Rc::new(RefCell::new(App::new(Point::new(1.0, 1.0))));
+    let controller = Rc::new(RefCell::new(App::new(Vec2DScreen::new(1.0, 1.0))));
     let window: ApplicationWindow = builder.get_object("main-window").expect("Couldn't get window");
     let header_bar: HeaderBar = builder.get_object("header-bar").expect("no header bar");
     let surface = Rc::new(RefCell::new(ImageSurface::create(cairo::Format::ARgb32, 1, 1).unwrap()));
@@ -340,19 +343,19 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         if let Some(direction) = event.get_scroll_direction() {
             match direction {
                 ScrollDirection::Up => {
-                    controller.borrow_mut().handle_offset(Point::new(0.0, 10.0));
+                    controller.borrow_mut().translate(Vec2DScreen::new(0.0, 10.0));
                     invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 ScrollDirection::Down => {
-                    controller.borrow_mut().handle_offset(Point::new(0.0, -10.0));
+                    controller.borrow_mut().translate(Vec2DScreen::new(0.0, -10.0));
                     invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 ScrollDirection::Left => {
-                    controller.borrow_mut().handle_offset(Point::new(10.0, 0.0));
+                    controller.borrow_mut().translate(Vec2DScreen::new(10.0, 0.0));
                     invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 ScrollDirection::Right => {
-                    controller.borrow_mut().handle_offset(Point::new(-10.0, 0.0));
+                    controller.borrow_mut().translate(Vec2DScreen::new(-10.0, 0.0));
                     invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 _ => {},
@@ -368,7 +371,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 .borrow_mut()
                 .handle_mouse_button_pressed(
                     gtk_button(event.get_button()),
-                    Point::from(event.get_position())
+                    Vec2DScreen::from(event.get_position())
                 );
 
             match redraw_hint {
@@ -391,7 +394,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 .borrow_mut()
                 .handle_mouse_button_released(
                     gtk_button(event.get_button()),
-                    Point::from(event.get_position())
+                    Vec2DScreen::from(event.get_position())
                 );
 
             match redraw_hint {
@@ -415,7 +418,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
         let redraw_hint = controller
             .borrow_mut()
-            .handle_mouse_move(Point::new(x, y));
+            .handle_mouse_move(Vec2DScreen::new(x, y));
 
         match redraw_hint {
             ShouldRedraw::All => {
@@ -431,7 +434,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_size_allocate(clone!(@strong controller, @strong surface => move |dw, allocation| {
-        controller.borrow_mut().resize(Point::new(allocation.width as f64, allocation.height as f64));
+        controller.borrow_mut().resize(Vec2DScreen::new(allocation.width as f64, allocation.height as f64));
         invalidate_and_redraw(&controller.borrow(), &surface, dw);
     }));
 

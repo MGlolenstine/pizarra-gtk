@@ -12,7 +12,7 @@ version = "1.3.1"
 [dependencies]
 gdk = "0.13"
 glib = "0.10"
-pizarra = "0.9.3"
+pizarra = "0.11"
 
 [dependencies.cairo-rs]
 version = "0.9"
