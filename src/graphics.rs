@@ -55,23 +55,23 @@ impl Drawable for DrawCommand {
                 ctx.stroke();
             },
             DrawCommand::Ellipse {
-                bbox, thickness, color,
+                thickness, color, center, bigside, smallside, angle,
             } => {
-                let bbox = [t.to_screen_coordinates(bbox[0]), t.to_screen_coordinates(bbox[1])];
-                let min = bbox[0].min(bbox[1]);
-                let max = bbox[0].max(bbox[1]);
-                let dimensions = max - min;
+                let center = t.to_screen_coordinates(center);
 
-                if dimensions.x == 0.0 || dimensions.y == 0.0 {
+                if bigside == 0.0 || smallside == 0.0 {
                     return;
                 }
+
+                dbg!(angle);
 
                 ctx.set_line_width(thickness * t.scale_factor());
                 ctx.set_source_rgba(color.r, color.g, color.b, color.a);
 
                 ctx.save();
-                ctx.translate(min.x + dimensions.x / 2., min.y + dimensions.y / 2.);
-                ctx.scale(dimensions.x / 2., dimensions.y / 2.);
+                ctx.translate(center.x, center.y);
+                ctx.rotate(angle.radians());
+                ctx.scale(bigside / 2., smallside / 2.);
                 ctx.arc(0., 0., 1., 0., 2.0 * PI);
                 ctx.restore();
                 ctx.stroke();

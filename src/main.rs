@@ -24,7 +24,7 @@ use pizarra::{
         ShouldRedraw, SaveStatus, MouseButton, SelectedTool,
     }, color::Color, transform::Transform, shape::ShapeType,
 };
-use pizarra::point::Vec2DScreen;
+use pizarra::point::{Point, Vec2DScreen};
 
 mod graphics;
 
