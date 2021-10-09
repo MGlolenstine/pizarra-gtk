@@ -134,10 +134,10 @@ fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc
                             invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                             set_subtitle(&header_bar, controller.borrow().get_save_status());
                         } else {
-                            dialog(window, "No pudimos interpretar el formato de este archivo :(", MessageType::Error);
+                            dialog(window, "No pude interpretar el formato de este archivo :(", MessageType::Error);
                         }
                     } else {
-                        dialog(window, "No pudimos leer los contenidos del archivo :(", MessageType::Error);
+                        dialog(window, "No pude leer los contenidos del archivo :(", MessageType::Error);
                     }
                 } else {
                     dialog(window, "Ese archivo no existe :(", MessageType::Error);
