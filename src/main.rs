@@ -327,9 +327,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         ctx.set_source_surface(&surface.borrow(), 0.0, 0.0);
         ctx.paint();
 
-        if let Some(command) = controller.borrow().draw_commands_for_current_shape() {
+        if let Some(commands) = controller.borrow().draw_commands_for_current_shape() {
             let t = controller.borrow().get_transform();
-            command.draw(&ctx, t);
+
+            for command in commands {
+                command.draw(&ctx, t);
+            }
         }
 
         Inhibit(false)
@@ -639,7 +642,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     let set_ellipse_menu: MenuItem = builder.get_object("tool-ellipse-btn").expect("no ellipse menu");
     set_ellipse_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
-        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::Ellipse));
+        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeType::ThreePointEllipse));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/ellipse.svg")));
     }));
 

@@ -55,15 +55,13 @@ impl Drawable for DrawCommand {
                 ctx.stroke();
             },
             DrawCommand::Ellipse {
-                thickness, color, center, bigside, smallside, angle,
+                thickness, color, center, semimajor, semiminor, angle,
             } => {
                 let center = t.to_screen_coordinates(center);
 
-                if bigside == 0.0 || smallside == 0.0 {
+                if semimajor == 0.0 || semiminor == 0.0 {
                     return;
                 }
-
-                dbg!(angle);
 
                 ctx.set_line_width(thickness * t.scale_factor());
                 ctx.set_source_rgba(color.r, color.g, color.b, color.a);
@@ -71,7 +69,7 @@ impl Drawable for DrawCommand {
                 ctx.save();
                 ctx.translate(center.x, center.y);
                 ctx.rotate(angle.radians());
-                ctx.scale(bigside / 2., smallside / 2.);
+                ctx.scale(semimajor, semiminor);
                 ctx.arc(0., 0., 1., 0., 2.0 * PI);
                 ctx.restore();
                 ctx.stroke();
