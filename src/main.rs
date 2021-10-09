@@ -349,22 +349,20 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             match direction {
                 ScrollDirection::Up => {
                     controller.borrow_mut().translate(Vec2DScreen::new(0.0, 10.0));
-                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 ScrollDirection::Down => {
                     controller.borrow_mut().translate(Vec2DScreen::new(0.0, -10.0));
-                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 ScrollDirection::Left => {
                     controller.borrow_mut().translate(Vec2DScreen::new(10.0, 0.0));
-                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 ScrollDirection::Right => {
                     controller.borrow_mut().translate(Vec2DScreen::new(-10.0, 0.0));
-                    invalidate_and_redraw(&controller.borrow(), &surface, dw);
                 },
                 _ => {},
             }
+
+            invalidate_and_redraw(&controller.borrow(), &surface, dw);
         }
 
         Inhibit(false)
