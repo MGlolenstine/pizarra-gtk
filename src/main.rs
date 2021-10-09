@@ -225,6 +225,8 @@ fn gtk_button(btn: u32) -> MouseButton {
     }
 }
 
+/// Redraws the visible portion of the screen from the stored shapes, not
+/// including the shape being drawn.
 fn invalidate_and_redraw(controller: &App, surface: &RefCell<ImageSurface>, dw: &DrawingArea) {
     let t = controller.get_transform();
     let commands = controller.draw_commands_for_screen();
