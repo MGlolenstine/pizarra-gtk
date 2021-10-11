@@ -18,6 +18,7 @@ use gio::prelude::*;
 use gio::ApplicationFlags;
 use glib::clone;
 use cairo::{ImageSurface, Context};
+use simple_logger::SimpleLogger;
 
 use pizarra::prelude::*;
 
@@ -660,6 +661,8 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 }
 
 fn main() {
+    SimpleLogger::new().init().unwrap();
+
     let application = Application::new(
         Some("tk.categulario.pizarra"),
         ApplicationFlags::NON_UNIQUE,
