@@ -343,16 +343,16 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         if let Some(direction) = event.get_scroll_direction() {
             match direction {
                 ScrollDirection::Up => {
-                    controller.borrow_mut().translate(Vec2DScreen::new(0.0, 10.0));
+                    controller.borrow_mut().scroll_up();
                 },
                 ScrollDirection::Down => {
-                    controller.borrow_mut().translate(Vec2DScreen::new(0.0, -10.0));
+                    controller.borrow_mut().scroll_down();
                 },
                 ScrollDirection::Left => {
-                    controller.borrow_mut().translate(Vec2DScreen::new(10.0, 0.0));
+                    controller.borrow_mut().scroll_left();
                 },
                 ScrollDirection::Right => {
-                    controller.borrow_mut().translate(Vec2DScreen::new(-10.0, 0.0));
+                    controller.borrow_mut().scroll_right();
                 },
                 _ => {},
             }
