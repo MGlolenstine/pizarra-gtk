@@ -531,6 +531,13 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     new_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move |_menu| {
         let save_status = controller.borrow().get_save_status().clone();
 
+        // TODO reconsider how this works. I think the existence of the reset()
+        // method is broken by default and instead we should replace the
+        // controller instance with a new one.
+        //
+        // Also this method should probably instead just launch a new window in
+        // some cases
+
         match save_status {
             SaveStatus::NewAndEmpty => {},
             SaveStatus::NewAndChanged => {
