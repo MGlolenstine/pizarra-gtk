@@ -19,12 +19,7 @@ use gio::ApplicationFlags;
 use glib::clone;
 use cairo::{ImageSurface, Context};
 
-use pizarra::{
-    App, app::{
-        ShouldRedraw, SaveStatus, MouseButton, SelectedTool,
-    }, color::Color, transform::Transform, shape::ShapeType,
-};
-use pizarra::point::{Point, Vec2DScreen};
+use pizarra::prelude::*;
 
 mod graphics;
 
@@ -69,7 +64,7 @@ fn ensure_extension(filename: &Path, extension: &str) -> PathBuf {
     }
 }
 
-fn render_drawing(controller: &App, ctx: &Context, topleft: Vec2DScreen) {
+fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2DScreen) {
     let t = Transform::new(
         (topleft - Vec2DScreen::new(RENDER_PADDING, RENDER_PADDING)).into(),
         1.0,
@@ -84,7 +79,7 @@ fn render_drawing(controller: &App, ctx: &Context, topleft: Vec2DScreen) {
     }
 }
 
-fn save_to_svg_logic(controller: &mut App, filename: &Path) -> std::io::Result<()> {
+fn save_to_svg_logic(controller: &mut Pizarra, filename: &Path) -> std::io::Result<()> {
     if let Some(svg_data) = controller.to_svg() {
         let svgfilename = ensure_extension(&filename, "svg");
 
@@ -98,7 +93,7 @@ fn save_to_svg_logic(controller: &mut App, filename: &Path) -> std::io::Result<(
 }
 
 /// Implements the logic of the _save-as_ feature
-fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCell<App>>) -> std::io::Result<()>
+fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>) -> std::io::Result<()>
     where P: IsA<Window>
 {
     let save_file_chooser = FileChooserNative::new(Some("Guardar"), Some(window), FileChooserAction::Save, Some("Guardar"), Some("Cancelar"));
@@ -117,7 +112,7 @@ fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCell<A
     Ok(())
 }
 
-fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<App>>, surface: Rc<RefCell<ImageSurface>>, dwb: Rc<RefCell<DrawingArea>>) {
+fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>, surface: Rc<RefCell<ImageSurface>>, dwb: Rc<RefCell<DrawingArea>>) {
     let open_file_chooser = FileChooserNative::new(Some("Abrir"), Some(window), FileChooserAction::Open, Some("Abrir"), Some("Cancelar"));
     let res = open_file_chooser.run();
 
@@ -149,7 +144,7 @@ fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc
 }
 
 /// Implements the logic of the export feature
-fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<App>>) {
+fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>) {
     let export_file_chooser = FileChooserNative::new(Some("Exportar"), Some(window), FileChooserAction::Save, Some("Exportar"), Some("Cancelar"));
     let res = export_file_chooser.run();
 
@@ -227,7 +222,7 @@ fn gtk_button(btn: u32) -> MouseButton {
 
 /// Redraws the visible portion of the screen from the stored shapes, not
 /// including the shape being drawn.
-fn invalidate_and_redraw(controller: &App, surface: &RefCell<ImageSurface>, dw: &DrawingArea) {
+fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurface>, dw: &DrawingArea) {
     let t = controller.get_transform();
     let commands = controller.draw_commands_for_screen();
     let p = controller.get_dimensions();
@@ -256,7 +251,7 @@ fn invalidate_and_redraw(controller: &App, surface: &RefCell<ImageSurface>, dw: 
 fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
     let builder = Builder::from_resource("/tk/categulario/pizarra/pizarra.glade");
-    let controller = Rc::new(RefCell::new(App::new(Vec2DScreen::new(1.0, 1.0))));
+    let controller = Rc::new(RefCell::new(Pizarra::new(Vec2DScreen::new(1.0, 1.0))));
     let window: ApplicationWindow = builder.get_object("main-window").expect("Couldn't get window");
     let header_bar: HeaderBar = builder.get_object("header-bar").expect("no header bar");
     let surface = Rc::new(RefCell::new(ImageSurface::create(cairo::Format::ARgb32, 1, 1).unwrap()));
