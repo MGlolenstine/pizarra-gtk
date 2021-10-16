@@ -4,7 +4,7 @@ use cairo::{Context, LineCap, LineJoin, Matrix};
 
 use pizarra::{
     draw_commands::DrawCommand, transform::Transform,
-    shape::path::PathCommand,
+    shape::path::{PathCommand, CubicBezierCurve},
 };
 
 pub trait Drawable {
@@ -14,7 +14,7 @@ pub trait Drawable {
 impl Drawable for DrawCommand {
     fn draw(self, ctx: &Context, t: Transform) {
         ctx.save();
-        ctx.set_matrix(Matrix::new(t.xx, t.yx, t.xy, t.yy, t.x0, t.y0));
+        ctx.transform(Matrix::new(t.xx, t.yx, t.xy, t.yy, t.x0, t.y0));
 
         match self {
             DrawCommand::Path {
@@ -26,15 +26,15 @@ impl Drawable for DrawCommand {
                 ctx.set_line_join(LineJoin::Round);
 
                 for point in commands.iter() {
-                    match point {
+                    match *point {
                         PathCommand::MoveTo(p) => {
                             ctx.move_to(p.x, p.y);
                         },
                         PathCommand::LineTo(p) => {
                             ctx.line_to(p.x, p.y);
                         },
-                        PathCommand::CurveTo(c) => {
-                            ctx.curve_to(c.pt1.x, c.pt1.y, c.pt2.x, c.pt2.y, c.to.x, c.to.y);
+                        PathCommand::CurveTo(CubicBezierCurve { pt1, pt2, to }) => {
+                            ctx.curve_to(pt1.x, pt1.y, pt2.x, pt2.y, to.x, to.y);
                         },
                     }
                 }
