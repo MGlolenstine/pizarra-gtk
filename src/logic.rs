@@ -173,7 +173,7 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
     let new_surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
     let context = cairo::Context::new(&new_surface);
 
-    let bgcolor = Color::black();
+    let bgcolor = controller.bgcolor();
 
     context.set_source_rgb(bgcolor.r, bgcolor.g, bgcolor.b);
     context.paint();
