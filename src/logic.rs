@@ -192,7 +192,7 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
 /// potentially other formats.
 fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2DWorld) {
     let t = Transform::new_translate(
-        (topleft - Vec2DWorld::new(RENDER_PADDING, RENDER_PADDING)).to_vec2d()
+        ((topleft - Vec2DWorld::new(RENDER_PADDING, RENDER_PADDING)) * -1.0).to_vec2d()
     );
     let bgcolor = controller.bgcolor();
 
