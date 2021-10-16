@@ -1,6 +1,6 @@
 use std::f64::consts::PI;
 
-use cairo::{Context, LineCap, LineJoin};
+use cairo::{Context, LineCap, LineJoin, Matrix};
 
 use pizarra::{
     draw_commands::DrawCommand, transform::Transform,
@@ -13,11 +13,14 @@ pub trait Drawable {
 
 impl Drawable for DrawCommand {
     fn draw(self, ctx: &Context, t: Transform) {
+        ctx.save();
+        ctx.set_matrix(Matrix::new(t.xx, t.yx, t.xy, t.yy, t.x0, t.y0));
+
         match self {
             DrawCommand::Path {
                 color, commands, thickness,
             } => {
-                ctx.set_line_width(thickness * t.scale_factor());
+                ctx.set_line_width(thickness);
                 ctx.set_source_rgba(color.r, color.g, color.b, color.a);
                 ctx.set_line_cap(LineCap::Round);
                 ctx.set_line_join(LineJoin::Round);
@@ -25,19 +28,13 @@ impl Drawable for DrawCommand {
                 for point in commands.iter() {
                     match point {
                         PathCommand::MoveTo(p) => {
-                            let p = t.to_screen_coordinates(*p);
                             ctx.move_to(p.x, p.y);
                         },
                         PathCommand::LineTo(p) => {
-                            let p = t.to_screen_coordinates(*p);
                             ctx.line_to(p.x, p.y);
                         },
                         PathCommand::CurveTo(c) => {
-                            let pt1 = t.to_screen_coordinates(c.pt1);
-                            let pt2 = t.to_screen_coordinates(c.pt2);
-                            let to = t.to_screen_coordinates(c.to);
-
-                            ctx.curve_to(pt1.x, pt1.y, pt2.x, pt2.y, to.x, to.y);
+                            ctx.curve_to(c.pt1.x, c.pt1.y, c.pt2.x, c.pt2.y, c.to.x, c.to.y);
                         },
                     }
                 }
@@ -47,23 +44,19 @@ impl Drawable for DrawCommand {
             DrawCommand::Circle {
                 thickness, center, radius, color,
             } => {
-                let c = t.to_screen_coordinates(center);
-
                 ctx.set_source_rgba(color.r, color.g, color.b, color.a);
-                ctx.arc(c.x, c.y, radius * t.scale_factor(), 0.0, 2.0*PI);
-                ctx.set_line_width(thickness * t.scale_factor());
+                ctx.arc(center.x, center.y, radius, 0.0, 2.0*PI);
+                ctx.set_line_width(thickness);
                 ctx.stroke();
             },
             DrawCommand::Ellipse {
                 thickness, color, center, semimajor, semiminor, angle,
             } => {
-                let center = t.to_screen_coordinates(center);
-
                 if semimajor == 0.0 || semiminor == 0.0 {
                     return;
                 }
 
-                ctx.set_line_width(thickness * t.scale_factor());
+                ctx.set_line_width(thickness);
                 ctx.set_source_rgba(color.r, color.g, color.b, color.a);
 
                 ctx.save();
@@ -75,5 +68,7 @@ impl Drawable for DrawCommand {
                 ctx.stroke();
             },
         }
+
+        ctx.restore();
     }
 }
