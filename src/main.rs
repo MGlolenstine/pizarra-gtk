@@ -487,7 +487,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 }
 
 fn main() {
-    SimpleLogger::new().init().unwrap();
+    SimpleLogger::new().env().init().unwrap();
 
     let application = Application::new(
         Some("tk.categulario.pizarra"),
