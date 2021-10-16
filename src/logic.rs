@@ -100,6 +100,7 @@ pub fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCe
     Ok(())
 }
 
+/// Logic of the open dialog
 pub fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>, surface: Rc<RefCell<ImageSurface>>, dwb: Rc<RefCell<DrawingArea>>) {
     let open_file_chooser = FileChooserNative::new(Some("Abrir"), Some(window), FileChooserAction::Open, Some("Abrir"), Some("Cancelar"));
     let res = open_file_chooser.run();
@@ -158,6 +159,9 @@ pub fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>
 
 /// Redraws the visible portion of the screen from the stored shapes, not
 /// including the shape being drawn.
+///
+/// Called on translate or rotate but not during the drawing phase of a new
+/// shape
 pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurface>, dw: &DrawingArea) {
     let t = controller.get_transform();
     let commands = controller.draw_commands_for_screen();
@@ -184,7 +188,8 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
     dw.queue_draw();
 }
 
-/// Renders the entire drawing to a cairo context
+/// Renders the entire drawing to a cairo context. Used for exporting to png and
+/// potentially other formats.
 fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2DWorld) {
     let t = Transform::new_translate(
         (topleft - Vec2DWorld::new(RENDER_PADDING, RENDER_PADDING)).to_vec2d()
