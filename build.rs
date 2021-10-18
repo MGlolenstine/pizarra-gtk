@@ -10,13 +10,15 @@ const XML_FOOTER: &str = r#"    </gresource>
 </gresources>
 "#;
 
-const RESOURCES: [&str; 9] = [
+const RESOURCES: &'static [&str] = &[
     "pizarra.glade",
 
     "icons/tk.categulario.pizarra.svg",
 
     "icons/alpha.svg",
-    "icons/ellipse.svg",
+    "icons/circle_by_three_points.svg",
+    "icons/circle_by_center_and_point.svg",
+    "icons/ellipse_by_foci_and_point.svg",
     "icons/eraser.svg",
     "icons/line.svg",
     "icons/polygon.svg",

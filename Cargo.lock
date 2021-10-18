@@ -555,9 +555,9 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "pizarra"
-version = "1.0.0"
+version = "1.1.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ddcfd6f34d398a9616fef21f27a3bd9a3f15cd5ede8f4a8b0bfb0fabfded48c5"
+checksum = "9f5885d351b4bf5fdd0a2d7d8f783635533cc5d9b36894eb73fe201ef34e1946"
 dependencies = [
  "lazy_static",
  "log",
@@ -575,7 +575,7 @@ dependencies = [
  "gio",
  "glib",
  "gtk",
- "pizarra 1.0.0",
+ "pizarra 1.1.0",
  "simple_logger",
  "winres",
 ]

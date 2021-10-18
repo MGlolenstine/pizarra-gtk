@@ -244,15 +244,23 @@ along with gpl.  If not, see <http://www.gnu.org/licenses/>.
       <object class="GtkMenuItem" id="tool-circle-btn">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">Círculo</property>
+        <property name="label" translatable="yes">Circunferencia por el centro y un punto</property>
         <accelerator key="c" signal="activate"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="tool-circle3-btn">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes">Circunferencia por tres puntos</property>
+        <accelerator key="k" signal="activate"/>
       </object>
     </child>
     <child>
       <object class="GtkMenuItem" id="tool-ellipse-btn">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
-        <property name="label" translatable="yes">Elipse</property>
+        <property name="label" translatable="yes">Elipse por los focos y un punto</property>
         <accelerator key="e" signal="activate"/>
       </object>
     </child>
