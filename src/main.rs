@@ -12,7 +12,7 @@ use gtk::{
     HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
     ScaleButton, AboutDialog, Image,
 };
-use gdk::{EventMask, EventType, ScrollDirection};
+use gdk::{EventMask, EventType, ScrollDirection, EventKey};
 use gtk::prelude::*;
 use gio::prelude::*;
 use gio::ApplicationFlags;
@@ -65,6 +65,13 @@ fn gtk_button(btn: u32) -> MouseButton {
         2 => MouseButton::Middle,
         3 => MouseButton::Right,
         _ => MouseButton::Unknown,
+    }
+}
+
+fn gtk_key(name: &str) -> Key {
+    match name {
+        "Shift_L" | "Shift_R" => Key::Shift,
+        _ => Key::Unknown,
     }
 }
 
@@ -155,9 +162,25 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         Inhibit(false)
     }));
 
-    drawing_area.connect_key_release_event(|_dw, _event| {
+    drawing_area.connect_key_press_event(clone!(@strong controller => move |_dw, event| {
+        if let Some(key_name) = event.get_keyval().name() {
+            let key = gtk_key(key_name.as_str());
+
+            controller.borrow_mut().handle_key_pressed(key);
+        }
+
         Inhibit(false)
-    });
+    }));
+
+    drawing_area.connect_key_release_event(clone!(@strong controller => move |_dw, event| {
+        if let Some(key_name) = event.get_keyval().name() {
+            let key = gtk_key(key_name.as_str());
+
+            controller.borrow_mut().handle_key_released(key);
+        }
+
+        Inhibit(false)
+    }));
 
     drawing_area.connect_scroll_event(clone!(@strong controller, @strong surface => move |dw, event| {
         if let Some(direction) = event.get_scroll_direction() {
