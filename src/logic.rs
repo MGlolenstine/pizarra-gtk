@@ -67,17 +67,30 @@ fn dialog(window: &ApplicationWindow, message: &str, msg_type: MessageType) {
     message_dialog.hide();
 }
 
-pub fn save_to_svg_logic(controller: &mut Pizarra, filename: &Path) -> std::io::Result<()> {
-    if let Some(svg_data) = controller.to_svg() {
+pub fn save_to_svg_logic(controller: Rc<RefCell<Pizarra>>, filename: &Path) -> std::io::Result<()> {
+    let svg_data = controller.borrow_mut().to_svg();
+
+    if let Some(svg_data) = svg_data {
         let svgfilename = ensure_extension(&filename, "svg");
 
         let mut svgfile = File::create(&svgfilename)?;
         svgfile.write_all(svg_data.as_bytes())?;
 
-        controller.set_saved(svgfilename);
+        controller.borrow_mut().set_saved(svgfilename);
     }
 
     Ok(())
+}
+
+pub fn save_to_svg_logic_with_inhibit(window: &ApplicationWindow, controller: Rc<RefCell<Pizarra>>, filename: &Path) -> Inhibit {
+    match save_to_svg_logic(controller, filename) {
+        Ok(_) => Inhibit(false),
+        Err(e) => {
+            dialog(window, &format!("Falló esto:\n\n{}", e), MessageType::Error);
+
+            Inhibit(true)
+        }
+    }
 }
 
 /// Implements the logic of the _save-as_ feature
@@ -90,7 +103,7 @@ pub fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCe
     match res {
         ResponseType::Accept => {
             if let Some(filename) = save_file_chooser.get_filename() {
-                save_to_svg_logic(&mut controller.borrow_mut(), &filename)?;
+                save_to_svg_logic(controller.clone(), &filename)?;
                 set_subtitle(&header_bar, controller.borrow().get_save_status());
             }
         },

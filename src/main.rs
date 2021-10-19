@@ -54,8 +54,8 @@ fn yes_no_cancel_dialog<F, G, H>(window: &ApplicationWindow, message: &str, yes_
 
     match response {
         ResponseType::Yes => yes_callback(),
-        ResponseType::Cancel | ResponseType::DeleteEvent => cancel_callback(),
-        _ => no_callback(),
+        ResponseType::No => no_callback(),
+        _ => cancel_callback(),
     }
 }
 
@@ -102,7 +102,11 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     // save on exit
     window.connect_delete_event(clone!(@strong controller, @strong window => move |_window, _event| {
-        match controller.borrow().get_save_status() {
+        let old_save_status = {
+            controller.borrow().get_save_status().clone()
+        };
+
+        match old_save_status {
             SaveStatus::NewAndChanged => yes_no_cancel_dialog(&window, "Ya hiciste algunos dibujos\n\n¿Deseas guardar?", || {
                 let save_file_chooser = FileChooserNative::new(Some("Guardar"), Some(&window), FileChooserAction::Save, Some("Guardar"), Some("Cancelar"));
                 let res = save_file_chooser.run();
@@ -110,13 +114,15 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 match res {
                     ResponseType::Accept => {
                         if let Some(filename) = save_file_chooser.get_filename() {
-                            save_to_svg_logic(&mut controller.borrow_mut(), &filename);
+                            save_to_svg_logic_with_inhibit(&window, controller.clone(), &filename)
+                        } else {
+                            Inhibit(true)
                         }
                     },
-                    _ => {},
+                    _ => {
+                        Inhibit(true)
+                    },
                 }
-
-                Inhibit(false)
             }, || {
                 Inhibit(false)
             }, || {
@@ -125,8 +131,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => Inhibit(false),
             SaveStatus::Saved(_path) => Inhibit(false),
             SaveStatus::Unsaved(path) => yes_no_cancel_dialog(&window, "Hay cambios desde la última vez que guardaste\n\n¿Quieres guardarlos?", || {
-                    save_to_svg_logic(&mut controller.borrow_mut(), &path);
-                    Inhibit(false)
+                    save_to_svg_logic_with_inhibit(&window, controller.clone(), &path)
                 }, || {
                     Inhibit(false)
                 }, || {
@@ -356,7 +361,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             },
             SaveStatus::Unsaved(path) => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_SINCE_LAST_TIME, clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
-                    save_to_svg_logic(&mut controller.borrow_mut(), &path);
+                    save_to_svg_logic(controller.clone(), &path);
                     open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
                     Inhibit(false)
                 }), || {
@@ -397,7 +402,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             },
             SaveStatus::Unsaved(path) => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_SINCE_LAST_TIME, || {
-                    save_to_svg_logic(&mut controller.borrow_mut(), &path);
+                    save_to_svg_logic(controller.clone(), &path);
                     controller.borrow_mut().reset();
                     invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                     set_subtitle(&header_bar, controller.borrow().get_save_status());
@@ -429,7 +434,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 save_as_logic(&window, &header_bar, controller.clone());
             },
             SaveStatus::Unsaved(path) => {
-                save_to_svg_logic(&mut controller.borrow_mut(), &path);
+                save_to_svg_logic(controller.clone(), &path);
                 controller.borrow_mut().set_saved(path.clone());
                 set_subtitle(&header_bar, controller.borrow().get_save_status());
             },
