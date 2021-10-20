@@ -52,6 +52,11 @@ Podría ser que estos dos comandos funcionen:
     brew install gtk+3
     cargo run
 
+## Empaquetado
+
+Por ahora utilizo el script `deploy.sh` para crear el archivador que se usa para
+los paquetes `pizarra-git` y `pizarra-bin` de AUR.
+
 ## Checklist antes de sacar un release
 
 * se puede dibugar con todas las herramientas
