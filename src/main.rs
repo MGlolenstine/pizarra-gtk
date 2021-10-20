@@ -434,9 +434,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 save_as_logic(&window, &header_bar, controller.clone());
             },
             SaveStatus::Unsaved(path) => {
-                save_to_svg_logic(controller.clone(), &path);
-                controller.borrow_mut().set_saved(path.clone());
-                set_subtitle(&header_bar, controller.borrow().get_save_status());
+                let inhibit = save_to_svg_logic_with_inhibit(&window, controller.clone(), &path);
+
+                if inhibit == Inhibit(false) {
+                    controller.borrow_mut().set_saved(path.clone());
+                    set_subtitle(&header_bar, controller.borrow().get_save_status());
+                }
             },
             SaveStatus::Saved(_path) => {},
         }
