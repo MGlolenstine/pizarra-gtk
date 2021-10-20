@@ -114,7 +114,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 match res {
                     ResponseType::Accept => {
                         if let Some(filename) = save_file_chooser.get_filename() {
-                            save_to_svg_logic_with_inhibit(&window, controller.clone(), &filename)
+                            save_to_svg_logic_with_error_dialg(&window, controller.clone(), &filename)
                         } else {
                             Inhibit(true)
                         }
@@ -131,7 +131,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => Inhibit(false),
             SaveStatus::Saved(_path) => Inhibit(false),
             SaveStatus::Unsaved(path) => yes_no_cancel_dialog(&window, "Hay cambios desde la última vez que guardaste\n\n¿Quieres guardarlos?", || {
-                    save_to_svg_logic_with_inhibit(&window, controller.clone(), &path)
+                    save_to_svg_logic_with_error_dialg(&window, controller.clone(), &path)
                 }, || {
                     Inhibit(false)
                 }, || {
@@ -364,9 +364,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             },
             SaveStatus::Unsaved(path) => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_SINCE_LAST_TIME, clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
-                    save_to_svg_logic(controller.clone(), &path);
-                    open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
-                    Inhibit(false)
+                    if let Inhibit(false) = save_to_svg_logic_with_error_dialg(&window, controller.clone(), &path) {
+                        open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
+                        Inhibit(false)
+                    } else {
+                        Inhibit(true)
+                    }
                 }), || {
                     Inhibit(false)
                 }, || {
@@ -393,6 +396,9 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndChanged => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, || {
                     if let Ok(_) = save_as_with_error_dialog(&window, &header_bar, controller.clone()) {
+                        controller.borrow_mut().reset();
+                        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
+                        set_subtitle(&header_bar, controller.borrow().get_save_status());
                         Inhibit(false)
                     } else {
                         Inhibit(true)
@@ -408,11 +414,14 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             },
             SaveStatus::Unsaved(path) => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_SINCE_LAST_TIME, || {
-                    save_to_svg_logic(controller.clone(), &path);
-                    controller.borrow_mut().reset();
-                    invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
-                    set_subtitle(&header_bar, controller.borrow().get_save_status());
-                    Inhibit(false)
+                    if let Inhibit(false) = save_to_svg_logic_with_error_dialg(&window, controller.clone(), &path) {
+                        controller.borrow_mut().reset();
+                        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
+                        set_subtitle(&header_bar, controller.borrow().get_save_status());
+                        Inhibit(false)
+                    } else {
+                        Inhibit(true)
+                    }
                 }, || {
                     controller.borrow_mut().reset();
                     invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
@@ -440,7 +449,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 save_as_with_error_dialog(&window, &header_bar, controller.clone()).ok();
             },
             SaveStatus::Unsaved(path) => {
-                let inhibit = save_to_svg_logic_with_inhibit(&window, controller.clone(), &path);
+                let inhibit = save_to_svg_logic_with_error_dialg(&window, controller.clone(), &path);
 
                 if inhibit == Inhibit(false) {
                     controller.borrow_mut().set_saved(path.clone());
@@ -519,6 +528,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     let about_btn: MenuItem = builder.get_object("about-btn").unwrap();
     about_btn.connect_activate(move |_| {
+        about_dialog.set_version(Some(env!("CARGO_PKG_VERSION")));
         let response = about_dialog.run();
         if response == ResponseType::DeleteEvent || response == ResponseType::Cancel {
             about_dialog.hide();

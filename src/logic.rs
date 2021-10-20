@@ -67,7 +67,7 @@ fn dialog(window: &ApplicationWindow, message: &str, msg_type: MessageType) {
     message_dialog.hide();
 }
 
-pub fn save_to_svg_logic(controller: Rc<RefCell<Pizarra>>, filename: &Path) -> std::io::Result<()> {
+fn save_to_svg_logic(controller: Rc<RefCell<Pizarra>>, filename: &Path) -> std::io::Result<()> {
     let svg_data = controller.borrow_mut().to_svg();
 
     if let Some(svg_data) = svg_data {
@@ -82,7 +82,7 @@ pub fn save_to_svg_logic(controller: Rc<RefCell<Pizarra>>, filename: &Path) -> s
     Ok(())
 }
 
-pub fn save_to_svg_logic_with_inhibit(window: &ApplicationWindow, controller: Rc<RefCell<Pizarra>>, filename: &Path) -> Inhibit {
+pub fn save_to_svg_logic_with_error_dialg(window: &ApplicationWindow, controller: Rc<RefCell<Pizarra>>, filename: &Path) -> Inhibit {
     match save_to_svg_logic(controller, filename) {
         Ok(_) => Inhibit(false),
         Err(e) => {
