@@ -10,7 +10,7 @@ const XML_FOOTER: &str = r#"    </gresource>
 </gresources>
 "#;
 
-const RESOURCES: &'static [&str] = &[
+const RESOURCES: &[&str] = &[
     "pizarra.glade",
 
     "icons/tk.categulario.pizarra.svg",

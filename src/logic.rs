@@ -71,7 +71,7 @@ fn save_to_svg_logic(controller: Rc<RefCell<Pizarra>>, filename: &Path) -> std::
     let svg_data = controller.borrow_mut().to_svg();
 
     if let Some(svg_data) = svg_data {
-        let svgfilename = ensure_extension(&filename, "svg");
+        let svgfilename = ensure_extension(filename, "svg");
 
         let mut svgfile = File::create(&svgfilename)?;
         svgfile.write_all(svg_data.as_bytes())?;
@@ -99,14 +99,11 @@ fn save_as_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller:
     let save_file_chooser = FileChooserNative::new(Some("Guardar"), Some(window), FileChooserAction::Save, Some("Guardar"), Some("Cancelar"));
     let res = save_file_chooser.run();
 
-    match res {
-        ResponseType::Accept => {
-            if let Some(filename) = save_file_chooser.get_filename() {
-                save_to_svg_logic(controller.clone(), &filename)?;
-                set_subtitle(&header_bar, controller.borrow().get_save_status());
-            }
-        },
-        _ => {},
+    if res == ResponseType::Accept {
+        if let Some(filename) = save_file_chooser.get_filename() {
+            save_to_svg_logic(controller.clone(), &filename)?;
+            set_subtitle(header_bar, controller.borrow().get_save_status());
+        }
     }
 
     Ok(())
@@ -129,30 +126,27 @@ pub fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller
     let open_file_chooser = FileChooserNative::new(Some("Abrir"), Some(window), FileChooserAction::Open, Some("Abrir"), Some("Cancelar"));
     let res = open_file_chooser.run();
 
-    match res {
-        ResponseType::Accept => {
-            if let Some(filename) = open_file_chooser.get_filename() {
-                if let Ok(mut file) = File::open(&filename) {
-                    let mut svg = String::new();
+    if res == ResponseType::Accept {
+        if let Some(filename) = open_file_chooser.get_filename() {
+            if let Ok(mut file) = File::open(&filename) {
+                let mut svg = String::new();
 
-                    if let Ok(_) = file.read_to_string(&mut svg) {
-                        let ans = { controller.borrow_mut().open(&svg) };
-                        if let Ok(_) = ans {
-                            controller.borrow_mut().set_saved(filename);
-                            invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
-                            set_subtitle(&header_bar, controller.borrow().get_save_status());
-                        } else {
-                            dialog(window, "No pude interpretar el formato de este archivo :(", MessageType::Error);
-                        }
+                if file.read_to_string(&mut svg).is_ok() {
+                    let ans = { controller.borrow_mut().open(&svg) };
+                    if ans.is_ok() {
+                        controller.borrow_mut().set_saved(filename);
+                        invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
+                        set_subtitle(header_bar, controller.borrow().get_save_status());
                     } else {
-                        dialog(window, "No pude leer los contenidos del archivo :(", MessageType::Error);
+                        dialog(window, "No pude interpretar el formato de este archivo :(", MessageType::Error);
                     }
                 } else {
-                    dialog(window, "Ese archivo no existe :(", MessageType::Error);
+                    dialog(window, "No pude leer los contenidos del archivo :(", MessageType::Error);
                 }
+            } else {
+                dialog(window, "Ese archivo no existe :(", MessageType::Error);
             }
-        },
-        _ => {},
+        }
     }
 }
 
@@ -161,23 +155,20 @@ pub fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>
     let export_file_chooser = FileChooserNative::new(Some("Exportar"), Some(window), FileChooserAction::Save, Some("Exportar"), Some("Cancelar"));
     let res = export_file_chooser.run();
 
-    match res {
-        ResponseType::Accept => {
-            if let Some(filename) = export_file_chooser.get_filename() {
-                if let Some([topleft, bottomright]) = controller.borrow().get_bounds() {
-                    let pngfilename = ensure_extension(&filename, "png");
-                    let width = (bottomright.x - topleft.x).abs() + 2.0 * RENDER_PADDING;
-                    let height = (bottomright.y - topleft.y).abs() + 2.0 * RENDER_PADDING;
-                    let surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
-                    let context = cairo::Context::new(&surface);
+    if res == ResponseType::Accept {
+        if let Some(filename) = export_file_chooser.get_filename() {
+            if let Some([topleft, bottomright]) = controller.borrow().get_bounds() {
+                let pngfilename = ensure_extension(&filename, "png");
+                let width = (bottomright.x - topleft.x).abs() + 2.0 * RENDER_PADDING;
+                let height = (bottomright.y - topleft.y).abs() + 2.0 * RENDER_PADDING;
+                let surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
+                let context = cairo::Context::new(&surface);
 
-                    render_drawing(&controller.borrow(), &context, topleft);
+                render_drawing(&controller.borrow(), &context, topleft);
 
-                    surface.write_to_png(&mut File::create(pngfilename).unwrap()).unwrap();
-                }
+                surface.write_to_png(&mut File::create(pngfilename).unwrap()).unwrap();
             }
-        },
-        _ => {},
+        }
     }
 }
 
@@ -224,6 +215,6 @@ fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2DWorld) {
     ctx.paint();
 
     for cmd in controller.draw_commands_for_drawing() {
-        cmd.draw(&ctx, t);
+        cmd.draw(ctx, t);
     }
 }

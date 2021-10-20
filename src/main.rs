@@ -28,8 +28,8 @@ mod logic;
 use graphics::Drawable;
 use logic::*;
 
-const UNSAVED_CHANGES_SINCE_LAST_TIME: &'static str = "Hiciste algunos trazos desde la última vez\n\n¿Los quieres guardar?";
-const UNSAVED_CHANGES_NEW_FILE: &'static str = "Hay algunos trazos aquí\n\n¿Los quieres guardar?";
+const UNSAVED_CHANGES_SINCE_LAST_TIME: &str = "Hiciste algunos trazos desde la última vez\n\n¿Los quieres guardar?";
+const UNSAVED_CHANGES_NEW_FILE: &str = "Hay algunos trazos aquí\n\n¿Los quieres guardar?";
 
 fn yes_no_cancel_dialog<F, G, H>(window: &ApplicationWindow, message: &str, yes_callback: F, no_callback: G, cancel_callback: H) -> Inhibit
     where
@@ -160,7 +160,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             let t = controller.borrow().get_transform();
 
             for command in commands {
-                command.draw(&ctx, t);
+                command.draw(ctx, t);
             }
         }
 
@@ -349,7 +349,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone()),
             SaveStatus::NewAndChanged => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
-                    if let Ok(_) = save_as_with_error_dialog(&window, &header_bar, controller.clone()) {
+                    if save_as_with_error_dialog(&window, &header_bar, controller.clone()).is_ok() {
                         open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
                         Inhibit(false)
                     } else {
@@ -395,7 +395,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => {},
             SaveStatus::NewAndChanged => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, || {
-                    if let Ok(_) = save_as_with_error_dialog(&window, &header_bar, controller.clone()) {
+                    if save_as_with_error_dialog(&window, &header_bar, controller.clone()).is_ok() {
                         controller.borrow_mut().reset();
                         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                         set_subtitle(&header_bar, controller.borrow().get_save_status());
@@ -452,7 +452,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 let inhibit = save_to_svg_logic_with_error_dialg(&window, controller.clone(), &path);
 
                 if inhibit == Inhibit(false) {
-                    controller.borrow_mut().set_saved(path.clone());
+                    controller.borrow_mut().set_saved(path);
                     set_subtitle(&header_bar, controller.borrow().get_save_status());
                 }
             },
