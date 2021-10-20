@@ -94,8 +94,7 @@ pub fn save_to_svg_logic_with_inhibit(window: &ApplicationWindow, controller: Rc
 }
 
 /// Implements the logic of the _save-as_ feature
-pub fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>) -> std::io::Result<()>
-    where P: IsA<Window>
+fn save_as_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>) -> std::io::Result<()>
 {
     let save_file_chooser = FileChooserNative::new(Some("Guardar"), Some(window), FileChooserAction::Save, Some("Guardar"), Some("Cancelar"));
     let res = save_file_chooser.run();
@@ -111,6 +110,18 @@ pub fn save_as_logic<P>(window: &P, header_bar: &HeaderBar, controller: Rc<RefCe
     }
 
     Ok(())
+}
+
+pub fn save_as_with_error_dialog(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>) -> Result<(), ()>
+{
+    match save_as_logic(window, header_bar, controller) {
+        Ok(_) => Ok(()),
+        Err(e) => {
+            dialog(window, &format!("Falló esto:\n\n{}", e), MessageType::Error);
+
+            Err(())
+        }
+    }
 }
 
 /// Logic of the open dialog

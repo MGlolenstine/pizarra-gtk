@@ -349,9 +349,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone()),
             SaveStatus::NewAndChanged => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
-                    save_as_logic(&window, &header_bar, controller.clone());
-                    open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
-                    Inhibit(false)
+                    if let Ok(_) = save_as_with_error_dialog(&window, &header_bar, controller.clone()) {
+                        open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
+                        Inhibit(false)
+                    } else {
+                        Inhibit(true)
+                    }
                 }), clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move || {
                     open_logic(&window, &header_bar, controller.clone(), surface.clone(), dwb.clone());
                     Inhibit(false)
@@ -389,8 +392,11 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             SaveStatus::NewAndEmpty => {},
             SaveStatus::NewAndChanged => {
                 yes_no_cancel_dialog(&window, UNSAVED_CHANGES_NEW_FILE, || {
-                    save_as_logic(&window, &header_bar, controller.clone());
-                    Inhibit(false)
+                    if let Ok(_) = save_as_with_error_dialog(&window, &header_bar, controller.clone()) {
+                        Inhibit(false)
+                    } else {
+                        Inhibit(true)
+                    }
                 }, || {
                     controller.borrow_mut().reset();
                     invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
@@ -431,7 +437,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         match save_status {
             SaveStatus::NewAndEmpty => {}, // nothing to save actually
             SaveStatus::NewAndChanged => {
-                save_as_logic(&window, &header_bar, controller.clone());
+                save_as_with_error_dialog(&window, &header_bar, controller.clone()).ok();
             },
             SaveStatus::Unsaved(path) => {
                 let inhibit = save_to_svg_logic_with_inhibit(&window, controller.clone(), &path);
@@ -452,13 +458,13 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         match save_status {
             SaveStatus::NewAndEmpty => {},
             SaveStatus::NewAndChanged => {
-                save_as_logic(&window, &header_bar, controller.clone());
+                save_as_with_error_dialog(&window, &header_bar, controller.clone()).ok();
             },
             SaveStatus::Unsaved(_path) => {
-                save_as_logic(&window, &header_bar, controller.clone());
+                save_as_with_error_dialog(&window, &header_bar, controller.clone()).ok();
             },
             SaveStatus::Saved(_path) => {
-                save_as_logic(&window, &header_bar, controller.clone());
+                save_as_with_error_dialog(&window, &header_bar, controller.clone()).ok();
             },
         }
     }));
