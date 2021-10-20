@@ -1,6 +1,22 @@
-# Pizarra, edición GTK
+# La pizarra
 
-Este es el frontend GTK de la [pizarra](https://gitlab.com/categulario/pizarra).
+Esta es una aplicación de dibujo a mano alzada, relativamente simple y de
+interfaz limpia, orientada a quienes como yo disfrutan de hacer rayones en hojas
+de papel, servilletas y ahora en la computadora.
+
+Para sacarle provecho sinceramente se necesita una tableta digitalizadora o
+pantalla táctil.
+
+Este repositorio es el frontend GTK de la pizarra. Lo realmente interesante está
+en [este otro repositorio](https://gitlab.com/categulario/pizarra).
+
+## ¿Qué puedo hacer en ella?
+
+Principalmmente dibujar trazos a mano alzada usando la herramienta lápiz
+(seleccionada por defecto), pero también hay algunas figuras como rectángulos,
+círculos, elipses y polígonos.
+
+Puedes guardar tus dibujos como SVG o exportarlos como PNG.
 
 ## ¿Dónde funciona?
 
@@ -40,6 +56,7 @@ Podría ser que estos dos comandos funcionen:
 
 * se puede dibugar con todas las herramientas
 * se puede hacer zoom para adentro y afuera, y regresar al inicio
+* se puede rotar
 * se puede cambiar el alpha y el grosor
 * se pueden borrar
 * ctrl+z, ctrl+shift+z
