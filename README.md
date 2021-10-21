@@ -54,7 +54,9 @@ Podría ser que estos dos comandos funcionen:
 
 ## Empaquetado
 
-Por ahora utilizo el script `deploy.sh` para crear el archivador que se usa para
+Primero hay que crear un nuevo tag de la nueva versión.
+
+Luego utilizo el script `deploy.sh` para crear el archivador que se usa para
 los paquetes `pizarra-git` y `pizarra-bin` de AUR.
 
 ## Checklist antes de sacar un release
