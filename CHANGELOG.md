@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.4.1
+
+- Corrije bug que mueve la barra de título al poner el segundo punto de una
+  elipse
+- Soluciona un problema presentado cuando se ponen los dos puntos de una elipse
+  en el mismo lugar
+
 ## 1.4.0
 
 - Rotación del canvas (presionando shift al trasladar la vista).
