@@ -54,10 +54,11 @@ Podría ser que estos dos comandos funcionen:
 
 ## Empaquetado
 
-Primero hay que crear un nuevo tag de la nueva versión.
+Primero hay que actualizar el changelog.
 
-Luego utilizo el script `deploy.sh` para crear el archivador que se usa para
-los paquetes `pizarra-git` y `pizarra-bin` de AUR.
+Luego crear un nuevo tag de la versión.
+
+Finalmente utilizar el script `deploy.sh` que hace la magia.
 
 ## Checklist antes de sacar un release
 
