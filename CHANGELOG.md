@@ -1,8 +1,13 @@
 # Cambios
 
+## 1.4.2
+
+- Corrige un bug que hace que las elipses no aparezcan en su lugar, en
+  particular si se hacen con el touchpad.
+
 ## 1.4.1
 
-- Corrije bug que mueve la barra de título al poner el segundo punto de una
+- Corrige bug que mueve la barra de título al poner el segundo punto de una
   elipse
 - Soluciona un problema presentado cuando se ponen los dos puntos de una elipse
   en el mismo lugar
