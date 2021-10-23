@@ -510,7 +510,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     let set_circle_by_three_points: MenuItem = builder.get_object("tool-circle3-btn").expect("no circle menu");
     set_circle_by_three_points.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
-        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::CircleByThreePoints));
+        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::CircleThroughThreePoints));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/circle_by_three_points.svg")));
     }));
 
