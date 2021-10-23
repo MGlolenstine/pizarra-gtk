@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.4.3
+
+- Corrige un bug al hacer circunferencias por tres puntos cuando los dos últimos
+  son el mismo. Ahora aparece un punto en la pantalla.
+
 ## 1.4.2
 
 - Corrige un bug que hace que las elipses no aparezcan en su lugar, en
