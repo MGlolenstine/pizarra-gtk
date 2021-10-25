@@ -1,5 +1,12 @@
 # Cambios
 
+## 1.4.4
+
+- Corrige un bug que afecta la forma de cerrar polígonos a diferentes niveles de
+  zoom. A mayor zoom el radio de cierre aumentaba mientras que a menor zoom el
+  radio de cierre disminuia. Ahora el radio de cierre es constante respecto a
+  las coordenadas de pantalla.
+
 ## 1.4.3
 
 - Corrige un bug al hacer circunferencias por tres puntos cuando los dos últimos
