@@ -12,7 +12,7 @@ version = "1.4.4"
 [dependencies]
 gdk = "0.13"
 glib = "0.10"
-pizarra = "1.1"
+pizarra = "1.1.6"
 simple_logger = "1.13.0"
 
 [dependencies.cairo-rs]

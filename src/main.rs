@@ -71,6 +71,7 @@ fn gtk_button(btn: u32) -> MouseButton {
 fn gtk_key(name: &str) -> Key {
     match name {
         "Shift_L" | "Shift_R" => Key::Shift,
+        "Escape" => Key::Escape,
         _ => Key::Unknown,
     }
 }
@@ -177,11 +178,14 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         Inhibit(false)
     }));
 
-    drawing_area.connect_key_release_event(clone!(@strong controller => move |_dw, event| {
+    drawing_area.connect_key_release_event(clone!(@strong controller, @strong surface => move |dw, event| {
         if let Some(key_name) = event.get_keyval().name() {
             let key = gtk_key(key_name.as_str());
+            let redraw = controller.borrow_mut().handle_key_released(key);
 
-            controller.borrow_mut().handle_key_released(key);
+            if let ShouldRedraw::All = redraw {
+                invalidate_and_redraw(&controller.borrow(), &surface, dw);
+            }
         }
 
         Inhibit(false)
