@@ -7,7 +7,7 @@ repository = "https://gitlab.com/categulario/pizarra-gtk"
 license-file = "LICENSE"
 edition = "2018"
 authors = ["Abraham Toriz <categulario@gmail.com>"]
-version = "1.4.4"
+version = "1.5.0"
 
 [dependencies]
 gdk = "0.13"
