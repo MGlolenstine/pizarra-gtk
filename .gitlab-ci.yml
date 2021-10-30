@@ -5,5 +5,23 @@ stages:
 build:
   stage: build
   image: categulario/pizarra-ci-builds:1.0.1
+  variables:
+    VERSION: $CI_COMMIT_TAG.$CI_COMMIT_SHA_SHORT
+    ARCH: x86_64
+    ARCHIVENAME: pizarra-$VERSION-$ARCH.tar.gz
   script:
-    - cargo build --release
+    # build the binary
+    # - cargo build --locked --release
+    # create the tar package
+    - mkdir -p build
+      # move things to the build directory
+      # - cp target/release/pizarra build/pizarra
+    - cp res/icons/tk.categulario.pizarra.svg build/pizarra.svg
+    - cp res/pizarra.desktop build/pizarra.desktop
+    - cp CHANGELOG.md build/CHANGELOG.md
+    - cp LICENSE build/LICENSE
+      # compress the tar file
+    - tar -cvzf $ARCHIVENAME build/
+  artifacts:
+    paths:
+      - $ARCHIVENAME
