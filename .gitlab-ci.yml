@@ -19,9 +19,15 @@ build:
     - cp res/icons/tk.categulario.pizarra.svg build/pizarra.svg
     - cp res/pizarra.desktop build/pizarra.desktop
     - cp CHANGELOG.md build/CHANGELOG.md
+    - cp README.md build/README.md
     - cp LICENSE build/LICENSE
       # compress the tar file
     - tar -cvzf $ARCHIVENAME build/
+      # makes the debian archive
+    - ./debpackage.sh
   artifacts:
     paths:
       - $ARCHIVENAME
+      - debian-package/pizarra_${VERSION}_amd64.deb
+  only:
+    - tags
