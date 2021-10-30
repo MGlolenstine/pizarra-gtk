@@ -648,7 +648,7 @@ dependencies = [
 
 [[package]]
 name = "pizarra"
-version = "1.5.1"
+version = "1.5.2"
 dependencies = [
  "cairo-rs",
  "directories",
