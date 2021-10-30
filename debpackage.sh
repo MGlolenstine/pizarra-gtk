@@ -5,7 +5,7 @@ DPKG_DIR="${DPKG_STAGING}/dpkg"
 PROJECT_MANTAINER="Abraham Toriz Cruz"
 PROJECT_HOMEPAGE="https://pizarra.categulario.tk"
 PROJECT_NAME=pizarra
-PROJECT_VERSION=$VERSION
+PROJECT_VERSION=${VERSION:1}
 
 mkdir -p "${DPKG_DIR}"
 
@@ -51,7 +51,7 @@ Architecture: ${DPKG_ARCH}
 Provides: ${PROJECT_NAME}
 Depends: libgtk-3-0
 Conflicts: ${DPKG_CONFLICTS}
-Description: An simple infinite-canvas free-hand vector drawing application
+Description: A simple infinite-canvas free-hand vector drawing application
   A simple infinite-canvas free-hand vector drawing application
 EOF
 DPKG_PATH="${DPKG_STAGING}/${DPKG_NAME}"
