@@ -11,11 +11,11 @@ build:
     ARCHIVENAME: pizarra-$VERSION-$ARCH.tar.gz
   script:
     # build the binary
-    # - cargo build --locked --release
+    - cargo build --locked --release
     # create the tar package
     - mkdir -p build
       # move things to the build directory
-      # - cp target/release/pizarra build/pizarra
+    - cp target/release/pizarra build/pizarra
     - cp res/icons/tk.categulario.pizarra.svg build/pizarra.svg
     - cp res/pizarra.desktop build/pizarra.desktop
     - cp CHANGELOG.md build/CHANGELOG.md
