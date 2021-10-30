@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.5.0
+
+- Lee configuraciones de un archivo ubicado en `~/.config/pizarra/config.toml`.
+
 ## 1.4.4
 
 - Corrige un bug que afecta la forma de cerrar polígonos a diferentes niveles de

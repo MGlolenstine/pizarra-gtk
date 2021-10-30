@@ -54,11 +54,9 @@ Podría ser que estos dos comandos funcionen:
 
 ## Empaquetado
 
-Primero hay que actualizar el changelog.
-
-Luego crear un nuevo tag de la versión.
-
-Finalmente utilizar el script `deploy.sh` que hace la magia.
+* Actualizar el changelog.
+* Luego crear un nuevo tag de la versión.
+* Finalmente utilizar el script `deploy.sh` que hace la magia.
 
 ## Checklist antes de sacar un release
 
