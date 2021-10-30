@@ -4,6 +4,6 @@ stages:
 
 build:
   stage: build
-  image: categulario/pizarra-ci-builds:latest
+  image: categulario/pizarra-ci-builds:1.0.1
   script:
     - cargo build --release
