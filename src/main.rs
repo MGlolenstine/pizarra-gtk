@@ -24,6 +24,7 @@ use pizarra::prelude::*;
 
 mod graphics;
 mod logic;
+mod config;
 
 use graphics::Drawable;
 use logic::*;
@@ -79,7 +80,7 @@ fn gtk_key(name: &str) -> Key {
 fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
     let builder = Builder::from_resource("/tk/categulario/pizarra/pizarra.glade");
-    let controller = Rc::new(RefCell::new(Pizarra::new(Vec2DScreen::new(1.0, 1.0))));
+    let controller = Rc::new(RefCell::new(Pizarra::new(Vec2DScreen::new(1.0, 1.0), config::read())));
     let window: ApplicationWindow = builder.get_object("main-window").expect("Couldn't get window");
     let header_bar: HeaderBar = builder.get_object("header-bar").expect("no header bar");
     let surface = Rc::new(RefCell::new(ImageSurface::create(cairo::Format::ARgb32, 1, 1).unwrap()));
