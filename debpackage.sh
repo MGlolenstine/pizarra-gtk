@@ -5,7 +5,7 @@ DPKG_DIR="${DPKG_STAGING}/dpkg"
 PROJECT_MANTAINER="Abraham Toriz Cruz"
 PROJECT_HOMEPAGE="https://pizarra.categulario.tk"
 PROJECT_NAME=pizarra
-PROJECT_VERSION=${VERSION}
+PROJECT_VERSION=${VERSION:1}
 
 mkdir -p "${DPKG_DIR}"
 
