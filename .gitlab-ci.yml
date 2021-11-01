@@ -3,11 +3,6 @@ stages:
   - upload
   - deploy
 
-variables:
-  VERSION: $CI_COMMIT_TAG
-  ARCHIVENAME: pizarra-$VERSION-x86_64.tar.gz
-  DEBARCHIVE: pizarra_${VERSION}_amd64.deb
-
 build:
   stage: build
   image: categulario/pizarra-ci-builds:1.0.1
@@ -24,18 +19,18 @@ build:
     - cp README.md build/README.md
     - cp LICENSE build/LICENSE
       # compress the tar file
-    - tar -cvzf $ARCHIVENAME build/
+    - tar -cvzf pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz build/
       # makes the debian archive
     - ./debpackage.sh
       # computes the sums
-    - sha256sum $ARCHIVENAME > $ARCHIVENAME.sum
-    - sha256sum debpackage/$DEBARCHIVE > $DEBARCHIVE.sum
+    - sha256sum pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz > pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz.sum
+    - sha256sum debian-package/pizarra_${CI_COMMIT_TAG:1}_amd64.deb > $pizarra_${CI_COMMIT_TAG:1}_amd64.deb.sum
   artifacts:
     paths:
-      - $ARCHIVENAME
-      - debian-package/$DEBARCHIVE
-      - $ARCHIVENAME.sum
-      - $DEBARCHIVE.sum
+      - pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz
+      - debian-package/pizarra_${CI_COMMIT_TAG:1}_amd64.deb
+      - pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz.sum
+      - pizarra_${CI_COMMIT_TAG:1}_amd64.deb.sum
   only:
     - tags
 
@@ -47,10 +42,10 @@ upload:
   - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
   - eval $(ssh-agent -s)
   - ssh-add <(echo "$PRIVATE_KEY")
-  - scp $ARCHIVENAME $SERVER_USER@$SERVER_HOST:$LINUX_RELEASE_PATH
-  - scp $ARCHIVENAME.sum $SERVER_USER@$SERVER_HOST:$LINUX_RELEASE_PATH
-  - scp debian-package/$DEBARCHIVE $SERVER_USER@$SERVER_HOST:$DEBIAN_RELEASE_PATH
-  - scp $DEBARCHIVE.sum $SERVER_USER@$SERVER_HOST:$DEBIAN_RELEASE_PATH
+  - scp pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz $SERVER_USER@$SERVER_HOST:$LINUX_RELEASE_PATH
+  - scp pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz.sum $SERVER_USER@$SERVER_HOST:$LINUX_RELEASE_PATH
+  - scp debian-package/pizarra_${CI_COMMIT_TAG:1}_amd64.deb $SERVER_USER@$SERVER_HOST:$DEBIAN_RELEASE_PATH
+  - scp debian-package/pizarra_${CI_COMMIT_TAG:1}_amd64.deb.sum $SERVER_USER@$SERVER_HOST:$DEBIAN_RELEASE_PATH
   only:
   - tags
 

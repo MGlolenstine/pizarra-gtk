@@ -5,7 +5,7 @@ DPKG_DIR="${DPKG_STAGING}/dpkg"
 PROJECT_MANTAINER="Abraham Toriz Cruz"
 PROJECT_HOMEPAGE="https://pizarra.categulario.tk"
 PROJECT_NAME=pizarra
-PROJECT_VERSION=${VERSION:1}
+PROJECT_VERSION=${CI_COMMIT_TAG:1}
 
 mkdir -p "${DPKG_DIR}"
 
@@ -13,7 +13,7 @@ DPKG_BASENAME=${PROJECT_NAME}
 DPKG_CONFLICTS=
 DPKG_VERSION=${PROJECT_VERSION}
 DPKG_ARCH=amd64
-DPKG_NAME="${DPKG_BASENAME}_${VERSION}_${DPKG_ARCH}.deb"
+DPKG_NAME="${DPKG_BASENAME}_${DPKG_VERSION}_${DPKG_ARCH}.deb"
 
 # Binary
 install -Dm755 "target/release/pizarra" "${DPKG_DIR}/usr/bin/pizarra"
