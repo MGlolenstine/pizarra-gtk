@@ -1,14 +1,16 @@
 stages:
   - build
+  - upload
   - deploy
+
+variables:
+  VERSION: ${CI_COMMIT_TAG:1}
+  ARCHIVENAME: pizarra-$VERSION-x86_64.tar.gz
+  DEBARCHIVE: pizarra_${VERSION}_amd64.deb
 
 build:
   stage: build
   image: categulario/pizarra-ci-builds:1.0.1
-  variables:
-    VERSION: ${CI_COMMIT_TAG:1}.$CI_COMMIT_SHORT_SHA
-    ARCH: x86_64
-    ARCHIVENAME: pizarra-$VERSION-$ARCH.tar.gz
   script:
     # build the binary
     - cargo build --locked --release
@@ -25,9 +27,40 @@ build:
     - tar -cvzf $ARCHIVENAME build/
       # makes the debian archive
     - ./debpackage.sh
+      # computes the sums
+    - sha256sum $ARCHIVENAME > $ARCHIVENAME.sum
+    - sha256sum debpackage/$DEBARCHIVE > $DEBARCHIVE.sum
   artifacts:
     paths:
       - $ARCHIVENAME
-      - debian-package/pizarra_${VERSION}_amd64.deb
+      - debian-package/$DEBARCHIVE
+      - $ARCHIVENAME.sum
+      - $DEBARCHIVE.sum
   only:
     - tags
+
+upload:
+  stage: upload
+  image: kroniak/ssh-client
+  script:
+  - mkdir -p ~/.ssh
+  - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+  - eval $(ssh-agent -s)
+  - ssh-add <(echo "$PRIVATE_KEY")
+  - scp $ARCHIVENAME $SERVER_USER@$SERVER_HOST:$LINUX_RELEASE_PATH
+  - scp $ARCHIVENAME.sum $SERVER_USER@$SERVER_HOST:$LINUX_RELEASE_PATH
+  - scp debian-package/$DEBARCHIVE $SERVER_USER@$SERVER_HOST:$DEBIAN_RELEASE_PATH
+  - scp $DEBARCHIVE.sum $SERVER_USER@$SERVER_HOST:$DEBIAN_RELEASE_PATH
+  only:
+  - tags
+
+    # deploy:arch-bin:
+    #   stage: deploy
+    #   image: bitnami/git
+    #   script:
+    #     - mkdir -p ~/.ssh
+    #     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+    #     - eval $(ssh-agent -s)
+    #     - ssh-add <(echo "$ARCH_PRIVATE_KEY")
+    #     - git clone aur@aur.archlinux.org/pizarra-bin.git
+    #     - cd pizarra-bin
