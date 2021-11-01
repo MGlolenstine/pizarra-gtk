@@ -62,5 +62,3 @@ upload:
     #     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
     #     - eval $(ssh-agent -s)
     #     - ssh-add <(echo "$ARCH_PRIVATE_KEY")
-    #     - git clone aur@aur.archlinux.org/pizarra-bin.git
-    #     - cd pizarra-bin
