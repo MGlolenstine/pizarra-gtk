@@ -71,7 +71,7 @@ deploy:arch-bin:
     - git config --global user.name "$COMMITER_NAME"
     - git config --global user.email "$COMMITER_EMAIL"
     # finally run the script
-    - $CI_PROJECT_DIR/scripts/release-aur-git.sh
+    - $CI_PROJECT_DIR/scripts/release-aur-bin.sh
 
 deploy:arch-git:
   stage: deploy
