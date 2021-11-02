@@ -57,11 +57,8 @@ upload:
 
 deploy:arch-bin:
   stage: deploy
-  image: chakralinux/makepkg
+  image: categulario/makepkg
   script:
-    # become this user
-    - sudo su builder
-    - cd
     # setup ssh
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
@@ -75,11 +72,8 @@ deploy:arch-bin:
 
 deploy:arch-git:
   stage: deploy
-  image: chakralinux/makepkg
+  image: categulario/makepkg
   script:
-    # become this user
-    - sudo su builder
-    - cd
     # setup ssh
     - mkdir -p ~/.ssh
     - echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
