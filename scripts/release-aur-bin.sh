@@ -2,7 +2,7 @@
 
 # some useful variables
 VERSION=${CI_COMMIT_TAG:1}
-ARCHIVENAME=pizarra_${CI_COMMIT_TAG:1}_x86-64.tar.gz
+ARCHIVENAME=pizarra-$VERSION-x86_64.tar.gz
 
 # clone the repo
 git clone $BIN_REPO_URL pizarra-bin
