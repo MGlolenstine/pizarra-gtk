@@ -68,7 +68,7 @@ deploy:arch-bin:
     - git config --global user.name "$COMMITER_NAME"
     - git config --global user.email "$COMMITER_EMAIL"
     # finally run the script
-    - scripts/release-aur-bin.sh
+    - ./scripts/release-aur-bin.sh
   rules:
     - if: '$CI_COMMIT_TAG =~ /v*/'
 
@@ -88,6 +88,6 @@ deploy:arch-git:
     - git config --global user.name "$COMMITER_NAME"
     - git config --global user.email "$COMMITER_EMAIL"
     # finally run the script
-    - scripts/release-aur-git.sh
+    - ./scripts/release-aur-git.sh
   rules:
     - if: '$CI_COMMIT_TAG =~ /v*/'
