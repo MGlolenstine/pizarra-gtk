@@ -11,7 +11,7 @@ git clone $BIN_REPO_URL pizarra-bin
 cd pizarra-bin
 
 # get the sum from the artifacts
-SUM=( `cat $ARCHIVENAME.sum` )
+SUM=( `cat ../$ARCHIVENAME.sum` )
 
 # Generate the PKGBUILD
 echo "# Maintainer: Abraham Toriz <categulario at gmail dot com>
