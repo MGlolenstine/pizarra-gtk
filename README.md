@@ -33,17 +33,19 @@ En este momento se ve así:
 
 ## Para compilar
 
-Es necesario tener [Rust instalado](https://rustup.rs), clonar el proyecto y
-ejecutar en una terminal dentro del directorio del proyecto:
+Es necesario tener [Rust instalado](https://rustup.rs), y las cabeceras de
+desarrollo de Gtk3 (paquete `libgtk-3-dev` en ubuntu, probablemente `gtk` en
+archlinux) clonar el proyecto y ejecutar en una terminal dentro del directorio
+del proyecto:
 
-`cargo run`
+`cargo run --release`
 
-Esto funciona de maravilla en linux (suponiendo que las cabeceras de desarrollo
-de gtk están instaladas).
+Esto mostraría una ventana completamente funcional de la aplicación. El binario
+está en `target/release/pizarra`
 
 ### En windows
 
-[Escribí una entrada en mi blog entera sobre cómo hacer esto](https://blog.categulario.tk/como-compilar-la-pizarra-en-windows.html)
+[Escribí una entrada en mi blog sobre cómo hacer esto](https://blog.categulario.tk/como-compilar-la-pizarra-en-windows.html)
 
 ### En mac
 
@@ -54,18 +56,8 @@ Podría ser que estos dos comandos funcionen:
 
 ## Empaquetado
 
+(esto es para mi, no para ti)
+
 * Actualizar el changelog.
-* Luego crear un nuevo tag de la versión.
-* Finalmente utilizar el script `deploy.sh` que hace la magia.
-
-## Checklist antes de sacar un release
-
-* se puede dibugar con todas las herramientas
-* se puede hacer zoom para adentro y afuera, y regresar al inicio
-* se puede rotar
-* se puede cambiar el alpha y el grosor
-* se pueden borrar
-* ctrl+z, ctrl+shift+z
-* se puede guardar
-* se puede abrir el archivo guardado
-* se puede exportar
+* Crear un nuevo tag de la versión.
+* `git push && git push --tags`
