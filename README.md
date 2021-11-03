@@ -1,8 +1,10 @@
 # La pizarra
 
-Esta es una aplicación de dibujo a mano alzada, relativamente simple y de
-interfaz limpia, orientada a quienes como yo disfrutan de hacer rayones en hojas
-de papel, servilletas y ahora en la computadora.
+Esta es una aplicación de dibujo vectorial a mano alzada con un lienzo y zoom
+infinitos¹, relativamente simple y de interfaz limpia, orientada a quienes como
+yo disfrutan de hacer rayones en hojas de papel, servilletas y ahora en la
+computadora. La creé y utilizo para hacer explicaciones en línea, o a veces
+simplemente para bosquejar cosas para mi mismo.
 
 Para sacarle provecho sinceramente se necesita una tableta digitalizadora o
 pantalla táctil.
@@ -61,3 +63,9 @@ Podría ser que estos dos comandos funcionen:
 * Actualizar el changelog.
 * Crear un nuevo tag de la versión.
 * `git push && git push --tags`
+
+___________________
+
+1. El zoom y el lienzo sí son finitos, están limitados por la precisión de
+   números de punto flotante de 64 bits, pero digamos para el uso cotidiano es
+   un espacio de dibujo bastante grande (:
