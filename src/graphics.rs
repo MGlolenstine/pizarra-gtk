@@ -21,7 +21,7 @@ impl Drawable for DrawCommand {
                 color, commands, thickness,
             } => {
                 ctx.set_line_width(thickness);
-                ctx.set_source_rgba(color.r, color.g, color.b, color.a);
+                ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
                 ctx.set_line_cap(LineCap::Round);
                 ctx.set_line_join(LineJoin::Round);
 
@@ -44,7 +44,7 @@ impl Drawable for DrawCommand {
             DrawCommand::Circle {
                 thickness, center, radius, color,
             } => {
-                ctx.set_source_rgba(color.r, color.g, color.b, color.a);
+                ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
                 ctx.arc(center.x, center.y, radius, 0.0, 2.0*PI);
                 ctx.set_line_width(thickness);
                 ctx.stroke();
@@ -57,7 +57,7 @@ impl Drawable for DrawCommand {
                 }
 
                 ctx.set_line_width(thickness);
-                ctx.set_source_rgba(color.r, color.g, color.b, color.a);
+                ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
 
                 ctx.save();
                 ctx.translate(center.x, center.y);

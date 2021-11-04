@@ -190,7 +190,7 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
 
     let bgcolor = controller.bgcolor();
 
-    context.set_source_rgb(bgcolor.r, bgcolor.g, bgcolor.b);
+    context.set_source_rgb(bgcolor.float_r(), bgcolor.float_g(), bgcolor.float_b());
     context.paint();
 
     // content
@@ -211,7 +211,7 @@ fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2DWorld) {
     );
     let bgcolor = controller.bgcolor();
 
-    ctx.set_source_rgb(bgcolor.r, bgcolor.g, bgcolor.b);
+    ctx.set_source_rgb(bgcolor.float_r(), bgcolor.float_g(), bgcolor.float_b());
     ctx.paint();
 
     for cmd in controller.draw_commands_for_drawing() {

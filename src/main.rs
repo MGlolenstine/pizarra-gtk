@@ -296,7 +296,8 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     color_chooser.connect_color_set(clone!(@strong controller, @strong dwb => move |chooser| {
         let rgba = chooser.get_rgba();
-        controller.borrow_mut().set_color(Color::from_rgba(rgba.red, rgba.green, rgba.blue, rgba.alpha));
+        let prev_alpha = controller.borrow().selected_color().alpha();
+        controller.borrow_mut().set_color(Color::from_float_rgb(rgba.red, rgba.green, rgba.blue).with_alpha(prev_alpha));
         dwb.borrow().queue_draw();
     }));
 
@@ -327,7 +328,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
     let alpha_btn: ScaleButton = builder.get_object("alpha-scale").unwrap();
     alpha_btn.connect_value_changed(clone!(@strong controller => move |_btn, value| {
-        controller.borrow_mut().set_alpha(value);
+        controller.borrow_mut().set_alpha((value * 255.0) as u8);
     }));
 
     // Undo/Redo
