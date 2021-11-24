@@ -12,7 +12,7 @@ use gtk::{
     HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
     ScaleButton, AboutDialog, Image,
 };
-use gdk::{EventMask, EventType, ScrollDirection};
+use gdk::{EventMask, EventType};
 use gtk::prelude::*;
 use gio::prelude::*;
 use gio::ApplicationFlags;
@@ -197,25 +197,9 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_scroll_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        if let Some(direction) = event.get_scroll_direction() {
-            match direction {
-                ScrollDirection::Up => {
-                    controller.borrow_mut().scroll_up();
-                },
-                ScrollDirection::Down => {
-                    controller.borrow_mut().scroll_down();
-                },
-                ScrollDirection::Left => {
-                    controller.borrow_mut().scroll_left();
-                },
-                ScrollDirection::Right => {
-                    controller.borrow_mut().scroll_right();
-                },
-                _ => {},
-            }
+        controller.borrow_mut().scroll(event.get_delta().into());
 
-            invalidate_and_redraw(&controller.borrow(), &surface, dw);
-        }
+        invalidate_and_redraw(&controller.borrow(), &surface, dw);
 
         Inhibit(false)
     }));
