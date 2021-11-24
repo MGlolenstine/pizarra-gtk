@@ -149,8 +149,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         | EventMask::BUTTON_PRESS_MASK | EventMask::BUTTON_RELEASE_MASK
         | EventMask::KEY_PRESS_MASK | EventMask::KEY_RELEASE_MASK
         | EventMask::POINTER_MOTION_MASK | EventMask::TABLET_PAD_MASK
-        | EventMask::SCROLL_MASK;
+        | EventMask::SCROLL_MASK | EventMask::TOUCH_MASK
+        | EventMask::POINTER_MOTION_MASK | EventMask::SMOOTH_SCROLL_MASK
+        | EventMask::ENTER_NOTIFY_MASK | EventMask::LEAVE_NOTIFY_MASK
+        | EventMask::PROXIMITY_IN_MASK | EventMask::PROXIMITY_OUT_MASK;
 
+    drawing_area.set_support_multidevice(true);
     drawing_area.set_can_focus(true);
     drawing_area.add_events(event_mask);
 
