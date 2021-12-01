@@ -12,7 +12,7 @@ use gtk::{
     HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
     ScaleButton, AboutDialog, Image,
 };
-use gdk::{EventMask, EventType};
+use gdk::{EventMask, EventType, ModifierType};
 use gtk::prelude::*;
 use gio::prelude::*;
 use gio::ApplicationFlags;
@@ -74,6 +74,14 @@ fn gtk_key(name: &str) -> Key {
         "Shift_L" | "Shift_R" => Key::Shift,
         "Escape" => Key::Escape,
         _ => Key::Unknown,
+    }
+}
+
+fn gtk_flags(flags: ModifierType) -> Flags {
+    Flags {
+        alt: flags.contains(ModifierType::MOD1_MASK),
+        ctrl: flags.contains(ModifierType::CONTROL_MASK),
+        shift: flags.contains(ModifierType::SHIFT_MASK),
     }
 }
 
@@ -197,7 +205,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_scroll_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        controller.borrow_mut().scroll(event.get_delta().into());
+        controller.borrow_mut().scroll(event.get_delta().into(), gtk_flags(event.get_state()));
 
         invalidate_and_redraw(&controller.borrow(), &surface, dw);
 
@@ -231,9 +239,10 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         if let EventType::ButtonRelease = event.get_event_type() {
             let redraw_hint = controller
                 .borrow_mut()
-                .handle_mouse_button_released(
+                .handle_mouse_button_released_flags(
                     gtk_button(event.get_button()),
-                    Vec2DScreen::from(event.get_position())
+                    Vec2DScreen::from(event.get_position()),
+                    gtk_flags(event.get_state())
                 );
 
             match redraw_hint {
@@ -257,7 +266,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
         let redraw_hint = controller
             .borrow_mut()
-            .handle_mouse_move(Vec2DScreen::new(x, y));
+            .handle_mouse_move_flags(Vec2DScreen::new(x, y), gtk_flags(event.get_state()));
 
         match redraw_hint {
             ShouldRedraw::All => {
