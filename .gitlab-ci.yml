@@ -15,7 +15,7 @@ variables:
 
 build:
   stage: build
-  image: categulario/pizarra-ci-builds:1.0.1
+  image: categulario/pizarra-ci-builds:latest
   script:
     # build the binary
     - cargo build --locked --release
