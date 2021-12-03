@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.5.4
+
+- Scroll suave con el mousepad
+- No explota con un archivo de configuración incompleto
+- Corrige el manejo de la tecla shift para rotación
+
 ## 1.5.0
 
 - Lee configuraciones de un archivo ubicado en `~/.config/pizarra/config.toml`.
