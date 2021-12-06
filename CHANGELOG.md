@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.5.5
+
+- Desactiva el logging por defecto (podría mejorar el rendimiento en pantallas
+  grandes)
+
 ## 1.5.4
 
 - Scroll suave con el mousepad
