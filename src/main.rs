@@ -14,7 +14,6 @@ use gtk::{
 };
 use gdk::{EventMask, EventType, ModifierType};
 use gtk::prelude::*;
-use gio::prelude::*;
 use gio::ApplicationFlags;
 use glib::clone;
 use cairo::ImageSurface;
@@ -88,11 +87,11 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
     let builder = Builder::from_resource("/tk/categulario/pizarra/pizarra.glade");
     let controller = Rc::new(RefCell::new(Pizarra::new(Vec2DScreen::new(1.0, 1.0), config::read())));
-    let window: ApplicationWindow = builder.get_object("main-window").expect("Couldn't get window");
-    let header_bar: HeaderBar = builder.get_object("header-bar").expect("no header bar");
+    let window: ApplicationWindow = builder.object("main-window").expect("Couldn't get window");
+    let header_bar: HeaderBar = builder.object("header-bar").expect("no header bar");
     let surface = Rc::new(RefCell::new(ImageSurface::create(cairo::Format::ARgb32, 1, 1).unwrap()));
-    let about_dialog: AboutDialog = builder.get_object("about-dialog").unwrap();
-    let tool_btn: Button = builder.get_object("tool-menu-btn").unwrap();
+    let about_dialog: AboutDialog = builder.object("about-dialog").unwrap();
+    let tool_btn: Button = builder.object("tool-menu-btn").unwrap();
 
     window.set_application(Some(app));
 
@@ -122,7 +121,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
                 match res {
                     ResponseType::Accept => {
-                        if let Some(filename) = save_file_chooser.get_filename() {
+                        if let Some(filename) = save_file_chooser.filename() {
                             save_to_svg_logic_with_error_dialg(&window, controller.clone(), &filename)
                         } else {
                             Inhibit(true)
@@ -150,7 +149,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     // Drawing area
-    let drawing_area: DrawingArea = builder.get_object("drawing-area").expect("No drawing_area");
+    let drawing_area: DrawingArea = builder.object("drawing-area").expect("No drawing_area");
 
     let event_mask = EventMask::POINTER_MOTION_MASK
         | EventMask::BUTTON_PRESS_MASK | EventMask::BUTTON_RELEASE_MASK
@@ -166,8 +165,8 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     drawing_area.add_events(event_mask);
 
     drawing_area.connect_draw(clone!(@strong controller, @strong surface => move |_dw, ctx| {
-        ctx.set_source_surface(&surface.borrow(), 0.0, 0.0);
-        ctx.paint();
+        ctx.set_source_surface(&surface.borrow(), 0.0, 0.0).unwrap();
+        ctx.paint().unwrap();
 
         if let Some(commands) = controller.borrow().draw_commands_for_current_shape() {
             let t = controller.borrow().get_transform();
@@ -181,7 +180,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_key_press_event(clone!(@strong controller => move |_dw, event| {
-        if let Some(key_name) = event.get_keyval().name() {
+        if let Some(key_name) = event.keyval().name() {
             let key = gtk_key(key_name.as_str());
 
             controller.borrow_mut().handle_key_pressed(key);
@@ -191,7 +190,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_key_release_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        if let Some(key_name) = event.get_keyval().name() {
+        if let Some(key_name) = event.keyval().name() {
             let key = gtk_key(key_name.as_str());
             let redraw = controller.borrow_mut().handle_key_released(key);
 
@@ -204,7 +203,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_scroll_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        controller.borrow_mut().scroll(event.get_delta().into(), gtk_flags(event.get_state()));
+        controller.borrow_mut().scroll(event.delta().into(), gtk_flags(event.state()));
 
         invalidate_and_redraw(&controller.borrow(), &surface, dw);
 
@@ -212,12 +211,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_button_press_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        if let EventType::ButtonPress = event.get_event_type() {
+        if let EventType::ButtonPress = event.event_type() {
             let redraw_hint = controller
                 .borrow_mut()
                 .handle_mouse_button_pressed(
-                    gtk_button(event.get_button()),
-                    Vec2DScreen::from(event.get_position())
+                    gtk_button(event.button()),
+                    Vec2DScreen::from(event.position())
                 );
 
             match redraw_hint {
@@ -235,13 +234,13 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_button_release_event(clone!(@strong controller, @strong surface, @strong header_bar => move |dw, event| {
-        if let EventType::ButtonRelease = event.get_event_type() {
+        if let EventType::ButtonRelease = event.event_type() {
             let redraw_hint = controller
                 .borrow_mut()
                 .handle_mouse_button_released_flags(
-                    gtk_button(event.get_button()),
-                    Vec2DScreen::from(event.get_position()),
-                    gtk_flags(event.get_state())
+                    gtk_button(event.button()),
+                    Vec2DScreen::from(event.position()),
+                    gtk_flags(event.state())
                 );
 
             match redraw_hint {
@@ -261,11 +260,11 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_motion_notify_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        let (x, y) = event.get_position();
+        let (x, y) = event.position();
 
         let redraw_hint = controller
             .borrow_mut()
-            .handle_mouse_move_flags(Vec2DScreen::new(x, y), gtk_flags(event.get_state()));
+            .handle_mouse_move_flags(Vec2DScreen::new(x, y), gtk_flags(event.state()));
 
         match redraw_hint {
             ShouldRedraw::All => {
@@ -288,54 +287,54 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     let dwb = Rc::new(RefCell::new(drawing_area));
 
     // Color chooser
-    let color_chooser: ColorButton = builder.get_object("color-chooser").expect("No color chooser");
+    let color_chooser: ColorButton = builder.object("color-chooser").expect("No color chooser");
 
     color_chooser.connect_color_set(clone!(@strong controller, @strong dwb => move |chooser| {
-        let rgba = chooser.get_rgba();
+        let rgba = chooser.rgba();
         let prev_alpha = controller.borrow().selected_color().alpha();
         controller.borrow_mut().set_color(Color::from_float_rgb(rgba.red, rgba.green, rgba.blue).with_alpha(prev_alpha));
         dwb.borrow().queue_draw();
     }));
 
     // Zoom buttons
-    let zoom_in_btn: Button = builder.get_object("zoom-in-btn").expect("No zoom in btn");
+    let zoom_in_btn: Button = builder.object("zoom-in-btn").expect("No zoom in btn");
     zoom_in_btn.connect_clicked(clone!(@strong controller, @strong dwb, @strong surface => move |_btn| {
         controller.borrow_mut().zoom_in();
         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
     }));
 
-    let zoom_out_btn: Button = builder.get_object("zoom-out-btn").expect("No zoom out btn");
+    let zoom_out_btn: Button = builder.object("zoom-out-btn").expect("No zoom out btn");
     zoom_out_btn.connect_clicked(clone!(@strong controller, @strong dwb, @strong surface => move |_btn| {
         controller.borrow_mut().zoom_out();
         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
     }));
 
-    let zoom_home_btn: Button = builder.get_object("zoom-home-btn").expect("No zoom home btn");
+    let zoom_home_btn: Button = builder.object("zoom-home-btn").expect("No zoom home btn");
     zoom_home_btn.connect_clicked(clone!(@strong controller, @strong dwb, @strong surface => move |_btn| {
         controller.borrow_mut().go_home();
         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
     }));
 
     // Thickness and alpha
-    let thickness_btn: ScaleButton = builder.get_object("thickness-scale").unwrap();
+    let thickness_btn: ScaleButton = builder.object("thickness-scale").unwrap();
     thickness_btn.connect_value_changed(clone!(@strong controller => move |_btn, value| {
         controller.borrow_mut().set_stroke(value);
     }));
 
-    let alpha_btn: ScaleButton = builder.get_object("alpha-scale").unwrap();
+    let alpha_btn: ScaleButton = builder.object("alpha-scale").unwrap();
     alpha_btn.connect_value_changed(clone!(@strong controller => move |_btn, value| {
         controller.borrow_mut().set_alpha((value * 255.0) as u8);
     }));
 
     // Undo/Redo
-    let undo_menu: MenuItem = builder.get_object("undo-btn").expect("No undo btn");
+    let undo_menu: MenuItem = builder.object("undo-btn").expect("No undo btn");
     undo_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong dwb, @strong surface => move |_menu| {
         controller.borrow_mut().undo();
         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
         set_subtitle(&header_bar, controller.borrow().get_save_status());
     }));
 
-    let redo_menu: MenuItem = builder.get_object("redo-btn").expect("No reundo btn");
+    let redo_menu: MenuItem = builder.object("redo-btn").expect("No reundo btn");
     redo_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong dwb, @strong surface => move |_menu| {
         controller.borrow_mut().redo();
         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
@@ -343,7 +342,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     // File management
-    let open_menu: MenuItem = builder.get_object("open-btn").expect("no open menu");
+    let open_menu: MenuItem = builder.object("open-btn").expect("no open menu");
     open_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move |_menu| {
         let save_status = controller.borrow().get_save_status().clone();
 
@@ -382,7 +381,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         }
     }));
 
-    let new_menu: MenuItem = builder.get_object("new-btn").expect("no new menu");
+    let new_menu: MenuItem = builder.object("new-btn").expect("no new menu");
     new_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window, @strong dwb, @strong surface => move |_menu| {
         let save_status = controller.borrow().get_save_status().clone();
 
@@ -441,7 +440,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         }
     }));
 
-    let save_menu: MenuItem = builder.get_object("save-btn").expect("no save menu");
+    let save_menu: MenuItem = builder.object("save-btn").expect("no save menu");
     save_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window => move |_menu| {
         let save_status = controller.borrow().get_save_status().clone();
 
@@ -462,7 +461,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         }
     }));
 
-    let save_as_menu: MenuItem = builder.get_object("save-as-btn").expect("no save as menu");
+    let save_as_menu: MenuItem = builder.object("save-as-btn").expect("no save as menu");
     save_as_menu.connect_activate(clone!(@strong controller, @strong header_bar, @strong window => move |_menu| {
         let save_status = controller.borrow().get_save_status().clone();
 
@@ -480,55 +479,55 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         }
     }));
 
-    let export_menu: MenuItem = builder.get_object("export-btn").expect("no export menu");
+    let export_menu: MenuItem = builder.object("export-btn").expect("no export menu");
     export_menu.connect_activate(clone!(@strong controller, @strong window => move |_menu| {
         export_logic(&window, controller.clone());
     }));
 
     // Change shape
-    let set_pen_menu: MenuItem = builder.get_object("tool-pen-btn").expect("no pen menu");
+    let set_pen_menu: MenuItem = builder.object("tool-pen-btn").expect("no pen menu");
     set_pen_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::Path));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/line.svg")));
     }));
 
-    let set_rectangle_menu: MenuItem = builder.get_object("tool-rect-btn").expect("no ractangle menu");
+    let set_rectangle_menu: MenuItem = builder.object("tool-rect-btn").expect("no ractangle menu");
     set_rectangle_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::Rectangle));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/rectangle.svg")));
     }));
 
-    let set_polygon_menu: MenuItem = builder.get_object("tool-polygon-btn").expect("no polygon menu");
+    let set_polygon_menu: MenuItem = builder.object("tool-polygon-btn").expect("no polygon menu");
     set_polygon_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::Polygon));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/polygon.svg")));
     }));
 
-    let set_circle_menu: MenuItem = builder.get_object("tool-circle-btn").expect("no circle menu");
+    let set_circle_menu: MenuItem = builder.object("tool-circle-btn").expect("no circle menu");
     set_circle_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::CircleByCenterAndPoint));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/circle_by_center_and_point.svg")));
     }));
 
-    let set_circle_by_three_points: MenuItem = builder.get_object("tool-circle3-btn").expect("no circle menu");
+    let set_circle_by_three_points: MenuItem = builder.object("tool-circle3-btn").expect("no circle menu");
     set_circle_by_three_points.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::CircleThroughThreePoints));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/circle_by_three_points.svg")));
     }));
 
-    let set_ellipse_menu: MenuItem = builder.get_object("tool-ellipse-btn").expect("no ellipse menu");
+    let set_ellipse_menu: MenuItem = builder.object("tool-ellipse-btn").expect("no ellipse menu");
     set_ellipse_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::ThreePointEllipse));
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/ellipse_by_foci_and_point.svg")));
     }));
 
-    let set_eraser_menu: MenuItem = builder.get_object("tool-eraser-btn").expect("no eraser menu");
+    let set_eraser_menu: MenuItem = builder.object("tool-eraser-btn").expect("no eraser menu");
     set_eraser_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Eraser);
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/eraser.svg")));
     }));
 
-    let about_btn: MenuItem = builder.get_object("about-btn").unwrap();
+    let about_btn: MenuItem = builder.object("about-btn").unwrap();
     about_btn.connect_activate(move |_| {
         about_dialog.set_version(Some(env!("CARGO_PKG_VERSION")));
         let response = about_dialog.run();
@@ -547,16 +546,16 @@ fn main() {
     let application = Application::new(
         Some("tk.categulario.pizarra"),
         ApplicationFlags::NON_UNIQUE,
-    ).expect("failed to initialize GTK application");
+    );
 
     let arguments: Vec<_> = env::args().collect();
 
     application.connect_activate(move |app| {
         let resource_bytes = include_bytes!(concat!(env!("OUT_DIR"), "/res/resources.gresource"));
-        let resource_data = glib::Bytes::from(&resource_bytes[..]);
+        let resource_data = gtk::glib::Bytes::from(&resource_bytes[..]);
         gio::resources_register(&gio::Resource::from_data(&resource_data).unwrap());
 
-        let icon_theme = gtk::IconTheme::get_default().expect("failed to get default icon theme");
+        let icon_theme = gtk::IconTheme::default().expect("failed to get default icon theme");
         icon_theme.add_resource_path("/tk/categulario/pizarra/icons");
 
         Window::set_default_icon_name("tk.categulario.pizarra");
@@ -564,5 +563,5 @@ fn main() {
         init(app, arguments.get(1).map(|f| f.into()));
     });
 
-    application.run(&[]);
+    application.run();
 }

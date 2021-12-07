@@ -13,7 +13,7 @@ pub trait Drawable {
 
 impl Drawable for DrawCommand {
     fn draw(self, ctx: &Context, t: Transform) {
-        ctx.save();
+        ctx.save().unwrap();
         ctx.transform(Matrix::new(t.xx, t.yx, t.xy, t.yy, t.x0, t.y0));
 
         match self {
@@ -39,7 +39,7 @@ impl Drawable for DrawCommand {
                     }
                 }
 
-                ctx.stroke();
+                ctx.stroke().unwrap();
             },
             DrawCommand::Circle {
                 thickness, center, radius, color,
@@ -47,7 +47,7 @@ impl Drawable for DrawCommand {
                 ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
                 ctx.arc(center.x, center.y, radius, 0.0, 2.0*PI);
                 ctx.set_line_width(thickness);
-                ctx.stroke();
+                ctx.stroke().unwrap();
             },
             DrawCommand::Ellipse {
                 thickness, color, center, semimajor, semiminor, angle,
@@ -59,16 +59,16 @@ impl Drawable for DrawCommand {
                 ctx.set_line_width(thickness);
                 ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
 
-                ctx.save();
+                ctx.save().unwrap();
                 ctx.translate(center.x, center.y);
                 ctx.rotate(angle.radians());
                 ctx.scale(semimajor, semiminor);
                 ctx.arc(0., 0., 1., 0., 2.0 * PI);
-                ctx.restore();
-                ctx.stroke();
+                ctx.restore().unwrap();
+                ctx.stroke().unwrap();
             },
         }
 
-        ctx.restore();
+        ctx.restore().unwrap();
     }
 }

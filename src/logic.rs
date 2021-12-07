@@ -100,7 +100,7 @@ fn save_as_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller:
     let res = save_file_chooser.run();
 
     if res == ResponseType::Accept {
-        if let Some(filename) = save_file_chooser.get_filename() {
+        if let Some(filename) = save_file_chooser.filename() {
             save_to_svg_logic(controller.clone(), &filename)?;
             set_subtitle(header_bar, controller.borrow().get_save_status());
         }
@@ -127,7 +127,7 @@ pub fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller
     let res = open_file_chooser.run();
 
     if res == ResponseType::Accept {
-        if let Some(filename) = open_file_chooser.get_filename() {
+        if let Some(filename) = open_file_chooser.filename() {
             if let Ok(mut file) = File::open(&filename) {
                 let mut svg = String::new();
 
@@ -156,13 +156,13 @@ pub fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>
     let res = export_file_chooser.run();
 
     if res == ResponseType::Accept {
-        if let Some(filename) = export_file_chooser.get_filename() {
+        if let Some(filename) = export_file_chooser.filename() {
             if let Some([topleft, bottomright]) = controller.borrow().get_bounds() {
                 let pngfilename = ensure_extension(&filename, "png");
                 let width = (bottomright.x - topleft.x).abs() + 2.0 * RENDER_PADDING;
                 let height = (bottomright.y - topleft.y).abs() + 2.0 * RENDER_PADDING;
                 let surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
-                let context = cairo::Context::new(&surface);
+                let context = cairo::Context::new(&surface).unwrap();
 
                 render_drawing(&controller.borrow(), &context, topleft);
 
@@ -186,12 +186,12 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
     let height = p.y;
 
     let new_surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
-    let context = cairo::Context::new(&new_surface);
+    let context = cairo::Context::new(&new_surface).unwrap();
 
     let bgcolor = controller.bgcolor();
 
     context.set_source_rgb(bgcolor.float_r(), bgcolor.float_g(), bgcolor.float_b());
-    context.paint();
+    context.paint().unwrap();
 
     // content
     for cmd in commands {
@@ -212,7 +212,7 @@ fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2DWorld) {
     let bgcolor = controller.bgcolor();
 
     ctx.set_source_rgb(bgcolor.float_r(), bgcolor.float_g(), bgcolor.float_b());
-    ctx.paint();
+    ctx.paint().unwrap();
 
     for cmd in controller.draw_commands_for_drawing() {
         cmd.draw(ctx, t);
