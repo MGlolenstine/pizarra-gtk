@@ -12,7 +12,7 @@ use gtk::{
     HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
     ScaleButton, AboutDialog, Image,
 };
-use gdk::{EventMask, EventType, ModifierType};
+use gdk::{EventMask, EventType, ModifierType, DeviceToolType};
 use gtk::prelude::*;
 use gio::ApplicationFlags;
 use glib::clone;
@@ -80,6 +80,13 @@ fn gtk_flags(flags: ModifierType) -> Flags {
         alt: flags.contains(ModifierType::MOD1_MASK),
         ctrl: flags.contains(ModifierType::CONTROL_MASK),
         shift: flags.contains(ModifierType::SHIFT_MASK),
+    }
+}
+
+fn gtk_tool(tool: DeviceToolType) -> Option<SelectedTool> {
+    match tool {
+        DeviceToolType::Eraser => Some(SelectedTool::Eraser),
+        _ => None,
     }
 }
 
@@ -214,9 +221,10 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         if let EventType::ButtonPress = event.event_type() {
             let redraw_hint = controller
                 .borrow_mut()
-                .handle_mouse_button_pressed(
+                .handle_mouse_button_pressed_flags(
                     gtk_button(event.button()),
-                    Vec2DScreen::from(event.position())
+                    Vec2DScreen::from(event.position()),
+                    event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
                 );
 
             match redraw_hint {
@@ -240,7 +248,8 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 .handle_mouse_button_released_flags(
                     gtk_button(event.button()),
                     Vec2DScreen::from(event.position()),
-                    gtk_flags(event.state())
+                    gtk_flags(event.state()),
+                    event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
                 );
 
             match redraw_hint {
@@ -264,7 +273,11 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 
         let redraw_hint = controller
             .borrow_mut()
-            .handle_mouse_move_flags(Vec2DScreen::new(x, y), gtk_flags(event.state()));
+            .handle_mouse_move_flags(
+                Vec2DScreen::new(x, y),
+                gtk_flags(event.state()),
+                event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
+            );
 
         match redraw_hint {
             ShouldRedraw::All => {
