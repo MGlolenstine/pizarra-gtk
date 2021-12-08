@@ -1,5 +1,10 @@
 # Cambios
 
+## 1.6.1
+
+- Corrige un problema en windows (introducido en 1.5.5) que evitaba que la
+  aplicación abriera. El problema estaba relacionado con env_logger.
+
 ## 1.6.0
 
 - Si tu tableta digitalizadora tiene goma, la pizarra quizá la pueda usar!
