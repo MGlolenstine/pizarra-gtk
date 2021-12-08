@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.6.0
+
+- Si tu tableta digitalizadora tiene goma, la pizarra quizá la pueda usar!
+
 ## 1.5.5
 
 - Desactiva el logging por defecto (podría mejorar el rendimiento en pantallas
