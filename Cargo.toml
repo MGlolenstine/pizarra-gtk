@@ -7,7 +7,7 @@ repository = "https://gitlab.com/categulario/pizarra-gtk"
 license-file = "LICENSE"
 edition = "2021"
 authors = ["Abraham Toriz <categulario@gmail.com>"]
-version = "1.5.5"
+version = "1.6.0"
 
 [dependencies]
 gdk = "0.14"
@@ -27,6 +27,5 @@ features = ["v3_22"]
 
 [dependencies.gio]
 version = "0.14"
-
 [target."cfg(windows)".build-dependencies]
 winres = "0.1"
