@@ -554,6 +554,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
 }
 
 fn main() {
+    #[cfg(not(windows))]
     env_logger::init();
 
     let application = Application::new(
