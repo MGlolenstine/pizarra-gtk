@@ -53,7 +53,7 @@ está en `target/release/pizarra`
 
 Podría ser que estos dos comandos funcionen:
 
-    brew install gtk+3
+    brew install gtk+3 adwaita-icon-theme
     cargo run
 
 ## Empaquetado
