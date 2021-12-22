@@ -69,15 +69,12 @@ fn dialog(window: &ApplicationWindow, message: &str, msg_type: MessageType) {
 
 fn save_to_svg_logic(controller: Rc<RefCell<Pizarra>>, filename: &Path) -> std::io::Result<()> {
     let svg_data = controller.borrow_mut().to_svg();
+    let svgfilename = ensure_extension(filename, "svg");
+    let mut svgfile = File::create(&svgfilename)?;
 
-    if let Some(svg_data) = svg_data {
-        let svgfilename = ensure_extension(filename, "svg");
+    svgfile.write_all(svg_data.as_bytes())?;
 
-        let mut svgfile = File::create(&svgfilename)?;
-        svgfile.write_all(svg_data.as_bytes())?;
-
-        controller.borrow_mut().set_saved(svgfilename);
-    }
+    controller.borrow_mut().set_saved(svgfilename);
 
     Ok(())
 }
