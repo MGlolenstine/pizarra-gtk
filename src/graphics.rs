@@ -3,17 +3,12 @@ use std::f64::consts::PI;
 use cairo::{Context, LineCap, LineJoin, Matrix};
 
 use pizarra::{
-    draw_commands::DrawCommand, transform::Transform,
+    draw_commands::{DrawCommand, Ellipse}, transform::Transform,
     path_command::{PathCommand, CubicBezierCurve},
     point::Point, color::Color,
 };
 
-fn draw_path<T: Point>(ctx: &Context, color: Color, commands: &[PathCommand<T>], thickness: f64) {
-    ctx.set_line_width(thickness);
-    ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
-    ctx.set_line_cap(LineCap::Round);
-    ctx.set_line_join(LineJoin::Round);
-
+fn draw_path<T: Point>(ctx: &Context, color: Option<Color>, fill: Option<Color>, commands: &[PathCommand<T>], thickness: f64) {
     for point in commands.iter() {
         match *point {
             PathCommand::MoveTo(p) => {
@@ -28,14 +23,54 @@ fn draw_path<T: Point>(ctx: &Context, color: Color, commands: &[PathCommand<T>],
         }
     }
 
-    ctx.stroke().unwrap();
+    if let Some(color) = color {
+        ctx.set_line_width(thickness);
+        ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
+        ctx.set_line_cap(LineCap::Round);
+        ctx.set_line_join(LineJoin::Round);
+        ctx.stroke().unwrap();
+    }
+    if let Some(color) = fill {
+        ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
+        ctx.fill().unwrap();
+    }
 }
 
-fn draw_circle<T: Point>(ctx: &Context, thickness: f64, center: T, radius: f64, color: Color) {
-    ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
+fn draw_circle<T: Point>(ctx: &Context, thickness: f64, center: T, radius: f64, color: Option<Color>, fill: Option<Color>) {
     ctx.arc(center.x(), center.y(), radius, 0.0, 2.0*PI);
     ctx.set_line_width(thickness);
-    ctx.stroke().unwrap();
+
+    if let Some(color) = color {
+        ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
+        ctx.stroke().unwrap();
+    }
+    if let Some(color) = fill {
+        ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
+        ctx.fill().unwrap();
+    }
+}
+
+fn draw_ellipse(ctx: &Context, e: Ellipse) {
+    if e.semimajor == 0.0 || e.semiminor == 0.0 {
+        return;
+    }
+
+    ctx.save().unwrap();
+    ctx.translate(e.center.x, e.center.y);
+    ctx.rotate(e.angle.radians());
+    ctx.scale(e.semimajor, e.semiminor);
+    ctx.arc(0., 0., 1., 0., 2.0 * PI);
+    ctx.restore().unwrap();
+
+    if let Some(color) = e.color {
+        ctx.set_line_width(e.thickness);
+        ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
+        ctx.stroke().unwrap();
+    }
+    if let Some(color) = e.fill {
+        ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
+        ctx.fill().unwrap();
+    }
 }
 
 pub trait Drawable {
@@ -54,46 +89,31 @@ impl Drawable for DrawCommand {
 
         match self {
             DrawCommand::Path {
-                color, commands, thickness,
+                color, fill, commands, thickness,
             }  => {
-                draw_path(ctx, *color, commands, *thickness);
+                draw_path(ctx, *color, *fill, commands, *thickness);
             }
 
             &DrawCommand::Circle {
-                thickness, center, radius, color,
+                thickness, center, radius, color, fill,
             } => {
-                draw_circle(ctx, thickness, center, radius, color);
+                draw_circle(ctx, thickness, center, radius, color, fill);
             }
 
-            &DrawCommand::Ellipse {
-                thickness, color, center, semimajor, semiminor, angle,
-            } => {
-                if semimajor == 0.0 || semiminor == 0.0 {
-                    return;
-                }
-
-                ctx.set_line_width(thickness);
-                ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
-
-                ctx.save().unwrap();
-                ctx.translate(center.x, center.y);
-                ctx.rotate(angle.radians());
-                ctx.scale(semimajor, semiminor);
-                ctx.arc(0., 0., 1., 0., 2.0 * PI);
-                ctx.restore().unwrap();
-                ctx.stroke().unwrap();
+            &DrawCommand::Ellipse(e) => {
+                draw_ellipse(ctx, e);
             }
 
             DrawCommand::ScreenPath {
-                color, commands, thickness,
+                color, fill, commands, thickness,
             } => {
-                draw_path(ctx, *color, commands, *thickness);
+                draw_path(ctx, *color, *fill, commands, *thickness);
             }
 
             &DrawCommand::ScreenCircle {
-                thickness, center, radius, color,
+                thickness, center, radius, color, fill,
             } => {
-                draw_circle(ctx, thickness, center, radius, color);
+                draw_circle(ctx, thickness, center, radius, color, fill);
             }
         }
 
