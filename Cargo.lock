@@ -675,21 +675,6 @@ checksum = "8b870d8c151b6f2fb93e84a13146138f05d02ed11c7e7c54f8826aaaf7c9f184"
 
 [[package]]
 name = "pizarra"
-version = "1.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "056960a899f536cb239a1d7cbebc60897b34f33099a6ea2233887b846b6a01d9"
-dependencies = [
- "lazy_static",
- "log",
- "regex",
- "rstar",
- "serde",
- "serde_with",
- "xml-rs",
-]
-
-[[package]]
-name = "pizarra"
 version = "1.6.1"
 dependencies = [
  "cairo-rs",
@@ -699,9 +684,24 @@ dependencies = [
  "gio",
  "glib 0.10.3",
  "gtk",
- "pizarra 1.6.0",
+ "pizarra 1.7.1",
  "toml",
  "winres",
+]
+
+[[package]]
+name = "pizarra"
+version = "1.7.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "49fef27a3a8cf61713e7354d0c3082aec56557f7daee192c3983fffc156f36a2"
+dependencies = [
+ "lazy_static",
+ "log",
+ "regex",
+ "rstar",
+ "serde",
+ "serde_with",
+ "xml-rs",
 ]
 
 [[package]]
