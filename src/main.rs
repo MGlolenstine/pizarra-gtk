@@ -175,12 +175,16 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         ctx.set_source_surface(&surface.borrow(), 0.0, 0.0).unwrap();
         ctx.paint().unwrap();
 
-        if let Some(commands) = controller.borrow().draw_commands_for_current_shape() {
-            let t = controller.borrow().get_transform();
+        let t = controller.borrow().get_transform();
 
+        if let Some(commands) = controller.borrow().draw_commands_for_current_shape() {
             for command in commands {
                 command.draw(ctx, t);
             }
+        }
+
+        for command in controller.borrow().draw_commands_for_tool() {
+            command.draw(ctx, t);
         }
 
         Inhibit(false)
@@ -286,7 +290,9 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             ShouldRedraw::Shape => {
                 dw.queue_draw();
             }
-            _ => {}
+            _ => {
+                dw.queue_draw();
+            }
         }
 
         Inhibit(false)
