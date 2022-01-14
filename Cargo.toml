@@ -12,7 +12,7 @@ version = "1.6.1"
 [dependencies]
 gdk = "0.14"
 glib = "0.10"
-pizarra = "1.7.1"
+pizarra = "1.8.0"
 env_logger = "0.9"
 directories = "3"
 toml = "0.5"

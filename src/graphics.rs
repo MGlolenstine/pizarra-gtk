@@ -3,9 +3,9 @@ use std::f64::consts::PI;
 use cairo::{Context, LineCap, LineJoin, Matrix};
 
 use pizarra::{
-    draw_commands::{DrawCommand, Ellipse}, transform::Transform,
+    draw_commands::DrawCommand, transform::Transform,
     path_command::{PathCommand, CubicBezierCurve},
-    point::Point, style::Style,
+    point::{Point, Vec2DWorld}, style::Style, geom::Ellipse,
 };
 
 fn draw_path<T: Point>(ctx: &Context, commands: &[PathCommand<T>], style: Style) {
@@ -50,7 +50,7 @@ fn draw_circle<T: Point>(ctx: &Context, center: T, radius: f64, style: Style) {
     }
 }
 
-fn draw_ellipse(ctx: &Context, e: Ellipse) {
+fn draw_ellipse(ctx: &Context, e: Ellipse<Vec2DWorld>, style: Style) {
     if e.semimajor == 0.0 || e.semiminor == 0.0 {
         return;
     }
@@ -62,12 +62,13 @@ fn draw_ellipse(ctx: &Context, e: Ellipse) {
     ctx.arc(0., 0., 1., 0., 2.0 * PI);
     ctx.restore().unwrap();
 
-    if let Some(s) = e.style.stroke {
+    if let Some(s) = style.stroke {
         ctx.set_line_width(s.size);
         ctx.set_source_rgba(s.color.float_r(), s.color.float_g(), s.color.float_b(), s.color.float_alpha());
         ctx.stroke().unwrap();
     }
-    if let Some(color) = e.style.fill {
+
+    if let Some(color) = style.fill {
         ctx.set_source_rgba(color.float_r(), color.float_g(), color.float_b(), color.float_alpha());
         ctx.fill().unwrap();
     }
@@ -94,8 +95,8 @@ impl Drawable for DrawCommand {
                 draw_path(ctx, commands, *style);
             }
 
-            &DrawCommand::Ellipse(e) => {
-                draw_ellipse(ctx, e);
+            &DrawCommand::Ellipse { ellipse, style } => {
+                draw_ellipse(ctx, ellipse, style);
             }
 
             DrawCommand::ScreenPath {
