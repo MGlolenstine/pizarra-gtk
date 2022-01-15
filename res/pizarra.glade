@@ -265,6 +265,14 @@ along with gpl.  If not, see <http://www.gnu.org/licenses/>.
       </object>
     </child>
     <child>
+      <object class="GtkMenuItem" id="tool-grid-btn">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes">Cuadrícula</property>
+        <accelerator key="q" signal="activate"/>
+      </object>
+    </child>
+    <child>
       <object class="GtkSeparatorMenuItem">
         <property name="visible">True</property>
         <property name="can-focus">False</property>

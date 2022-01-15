@@ -547,6 +547,12 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/ellipse_by_foci_and_point.svg")));
     }));
 
+    let set_grid_menu: MenuItem = builder.object("tool-grid-btn").expect("no grid menu");
+    set_grid_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
+        controller.borrow_mut().set_tool(SelectedTool::Shape(ShapeTool::Grid));
+        tool_btn.set_image(Some(&Image::from_resource("/tk/categulario/pizarra/icons/grid.svg")));
+    }));
+
     let set_eraser_menu: MenuItem = builder.object("tool-eraser-btn").expect("no eraser menu");
     set_eraser_menu.connect_activate(clone!(@strong controller, @strong tool_btn => move |_menu| {
         controller.borrow_mut().set_tool(SelectedTool::Eraser);

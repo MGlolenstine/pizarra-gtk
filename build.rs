@@ -24,6 +24,7 @@ const RESOURCES: &[&str] = &[
     "icons/polygon.svg",
     "icons/rectangle.svg",
     "icons/thickness.svg",
+    "icons/grid.svg",
 ];
 
 fn main() {
