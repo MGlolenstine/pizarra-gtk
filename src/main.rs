@@ -12,7 +12,7 @@ use gtk::{
     HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
     ScaleButton, AboutDialog, Image,
 };
-use gdk::{EventMask, EventType, ModifierType, DeviceToolType};
+use gdk::{EventMask, EventType, ModifierType, DeviceToolType, Event};
 use gtk::prelude::*;
 use gio::ApplicationFlags;
 use glib::clone;
@@ -501,6 +501,11 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     let export_menu: MenuItem = builder.object("export-btn").expect("no export menu");
     export_menu.connect_activate(clone!(@strong controller, @strong window => move |_menu| {
         export_logic(&window, controller.clone());
+    }));
+
+    let exit_menu: MenuItem = builder.object("exit-btn").expect("no save menu");
+    exit_menu.connect_activate(clone!(@strong controller, @strong window => move |_menu| {
+        window.close();
     }));
 
     // Change shape
