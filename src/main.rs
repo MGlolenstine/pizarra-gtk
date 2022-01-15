@@ -12,7 +12,7 @@ use gtk::{
     HeaderBar, MessageDialog, DialogFlags, MessageType, ButtonsType, Window,
     ScaleButton, AboutDialog, Image,
 };
-use gdk::{EventMask, EventType, ModifierType, DeviceToolType, Event};
+use gdk::{EventMask, EventType, ModifierType, DeviceToolType};
 use gtk::prelude::*;
 use gio::ApplicationFlags;
 use glib::clone;
@@ -504,7 +504,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     let exit_menu: MenuItem = builder.object("exit-btn").expect("no save menu");
-    exit_menu.connect_activate(clone!(@strong controller, @strong window => move |_menu| {
+    exit_menu.connect_activate(clone!(@strong window => move |_menu| {
         window.close();
     }));
 
