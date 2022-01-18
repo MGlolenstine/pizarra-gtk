@@ -214,7 +214,9 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_scroll_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        controller.borrow_mut().scroll(event.delta().into(), gtk_flags(event.state()));
+        let delta = event.scroll_deltas().unwrap_or(event.delta());
+
+        controller.borrow_mut().scroll(delta.into(), gtk_flags(event.state()));
 
         invalidate_and_redraw(&controller.borrow(), &surface, dw);
 
