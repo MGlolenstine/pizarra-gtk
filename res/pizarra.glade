@@ -273,6 +273,14 @@ along with gpl.  If not, see <http://www.gnu.org/licenses/>.
       </object>
     </child>
     <child>
+      <object class="GtkMenuItem" id="tool-free-grid-btn">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="label" translatable="yes">Cuadrícula libre</property>
+        <accelerator key="q" signal="activate" modifiers="GDK_MOD1_MASK"/>
+      </object>
+    </child>
+    <child>
       <object class="GtkSeparatorMenuItem">
         <property name="visible">True</property>
         <property name="can-focus">False</property>
