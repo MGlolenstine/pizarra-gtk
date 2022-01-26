@@ -16,9 +16,6 @@ use pizarra::prelude::*;
 
 use crate::graphics::Drawable;
 
-/// Padding in pixels around the bbox of the drawing when exporting or saving
-const RENDER_PADDING: f64 = 20.0;
-
 fn ensure_extension(filename: &Path, extension: &str) -> PathBuf {
     if let Some(ext) = filename.extension() {
         if ext != extension {
@@ -155,10 +152,10 @@ pub fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>
     if res == ResponseType::Accept {
         if let Some(filename) = export_file_chooser.filename() {
             if let Some([topleft, bottomright]) = controller.borrow().get_bounds() {
+                let export_padding = controller.borrow().config().export_padding;
                 let pngfilename = ensure_extension(&filename, "png");
-                let width = (bottomright.x - topleft.x).abs() + 2.0 * RENDER_PADDING;
-                let height = (bottomright.y - topleft.y).abs() + 2.0 * RENDER_PADDING;
-                let surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
+                let dimensions = (bottomright - topleft).abs() + Vec2D::new(export_padding * 2.0.into(), export_padding * 2.0.into());
+                let surface = ImageSurface::create(cairo::Format::ARgb32, dimensions.x.val() as i32, dimensions.y.val() as i32).unwrap();
                 let context = cairo::Context::new(&surface).unwrap();
 
                 render_drawing(&controller.borrow(), &context, topleft);
@@ -202,9 +199,10 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
 
 /// Renders the entire drawing to a cairo context. Used for exporting to png and
 /// potentially other formats.
-fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2DWorld) {
+fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2D<WorldUnit>) {
+    let export_padding = controller.config().export_padding;
     let t = Transform::new_translate(
-        ((topleft - Vec2DWorld::new(RENDER_PADDING, RENDER_PADDING)) * -1.0).to_vec2d()
+        ((topleft - Vec2D::new(export_padding, export_padding)) * -1.0).to_vec2d()
     );
     let bgcolor = controller.bgcolor();
 
