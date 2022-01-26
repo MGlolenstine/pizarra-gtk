@@ -674,6 +674,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "num-derive"
+version = "0.3.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "876a53fff98e03a936a674b29568b0e605f06b29372c2489ff4de23f1949743d"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn",
+]
+
+[[package]]
 name = "num-traits"
 version = "0.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -751,19 +762,21 @@ dependencies = [
  "gio",
  "glib 0.10.3",
  "gtk",
- "pizarra 1.10.1",
+ "pizarra 2.0.0",
  "toml",
  "winres",
 ]
 
 [[package]]
 name = "pizarra"
-version = "1.10.1"
+version = "2.0.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "24af8e94a4e055f1378a0eaf42a3e15839e99a6fcec0ab58e36b481cb68c8780"
+checksum = "9e94cc5c4ba58ba82c2c61eb95df06b40bc52e4f582b604c622ecc4964f8249a"
 dependencies = [
  "lazy_static",
  "log",
+ "num-derive",
+ "num-traits",
  "regex",
  "rstar",
  "serde",

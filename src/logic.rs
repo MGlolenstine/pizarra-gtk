@@ -179,8 +179,8 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
     let commands = controller.draw_commands_for_screen();
     let p = controller.get_dimensions();
 
-    let width = p.x;
-    let height = p.y;
+    let width = p.x.val();
+    let height = p.y.val();
 
     let new_surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
     let context = cairo::Context::new(&new_surface).unwrap();

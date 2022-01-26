@@ -93,7 +93,7 @@ fn gtk_tool(tool: DeviceToolType) -> Option<SelectedTool> {
 fn init(app: &Application, filename: Option<PathBuf>) {
     // Initialize layout from .glade file
     let builder = Builder::from_resource("/tk/categulario/pizarra/pizarra.glade");
-    let controller = Rc::new(RefCell::new(Pizarra::new(Vec2DScreen::new(1.0, 1.0), config::read())));
+    let controller = Rc::new(RefCell::new(Pizarra::new(Vec2D::new_screen(1.0, 1.0), config::read())));
     let window: ApplicationWindow = builder.object("main-window").expect("Couldn't get window");
     let header_bar: HeaderBar = builder.object("header-bar").expect("no header bar");
     let surface = Rc::new(RefCell::new(ImageSurface::create(cairo::Format::ARgb32, 1, 1).unwrap()));
@@ -214,7 +214,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_scroll_event(clone!(@strong controller, @strong surface => move |dw, event| {
-        let delta = event.scroll_deltas().unwrap_or(event.delta());
+        let delta = event.scroll_deltas().unwrap_or_else(|| event.delta());
 
         controller.borrow_mut().scroll(delta.into(), gtk_flags(event.state()));
 
@@ -229,7 +229,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 .borrow_mut()
                 .handle_mouse_button_pressed_flags(
                     gtk_button(event.button()),
-                    Vec2DScreen::from(event.position()),
+                    Vec2D::from(event.position()),
                     event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
                 );
 
@@ -253,7 +253,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 .borrow_mut()
                 .handle_mouse_button_released_flags(
                     gtk_button(event.button()),
-                    Vec2DScreen::from(event.position()),
+                    Vec2D::from(event.position()),
                     gtk_flags(event.state()),
                     event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
                 );
@@ -280,7 +280,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
         let redraw_hint = controller
             .borrow_mut()
             .handle_mouse_move_flags(
-                Vec2DScreen::new(x, y),
+                Vec2D::new_screen(x, y),
                 gtk_flags(event.state()),
                 event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
             );
@@ -301,7 +301,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_size_allocate(clone!(@strong controller, @strong surface => move |dw, allocation| {
-        controller.borrow_mut().resize(Vec2DScreen::new(allocation.width as f64, allocation.height as f64));
+        controller.borrow_mut().resize(Vec2D::new_screen(allocation.width as f64, allocation.height as f64));
         invalidate_and_redraw(&controller.borrow(), &surface, dw);
     }));
 
@@ -339,7 +339,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     // Thickness and alpha
     let thickness_btn: ScaleButton = builder.object("thickness-scale").unwrap();
     thickness_btn.connect_value_changed(clone!(@strong controller => move |_btn, value| {
-        controller.borrow_mut().set_stroke(value);
+        controller.borrow_mut().set_stroke(value.into());
     }));
 
     let alpha_btn: ScaleButton = builder.object("alpha-scale").unwrap();
