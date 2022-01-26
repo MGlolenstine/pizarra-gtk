@@ -6,26 +6,14 @@ yo disfrutan de hacer rayones en hojas de papel, servilletas y ahora en la
 computadora. La creé y utilizo para hacer explicaciones en línea, o a veces
 simplemente para bosquejar cosas para mi mismo.
 
-Para sacarle provecho sinceramente se necesita una tableta digitalizadora o
-pantalla táctil.
+Para sacarle el máximo provecho se necesita una tableta digitalizadora o
+pantalla táctil, pero trabajo en que sea completamente usable con lo mínimo, que
+podría ser un mouse o trackpad
 
 Este repositorio es el frontend GTK de la pizarra. Lo realmente interesante está
 en [este otro repositorio](https://gitlab.com/categulario/pizarra).
 
-## ¿Qué puedo hacer en ella?
-
-Principalmmente dibujar trazos a mano alzada usando la herramienta lápiz
-(seleccionada por defecto), pero también hay algunas figuras como rectángulos,
-círculos, elipses y polígonos.
-
-Puedes guardar tus dibujos como SVG o exportarlos como PNG.
-
-## ¿Dónde funciona?
-
-Debería funcionar en cualquier plataforma en la que funcione Rust y Gtk. Por el
-momento funciona confiablemente en Linux, [hay un instalador para
-windows](https://pizarra.categulario.tk) y se de alguien que la logró compilar
-en mac.
+Para conocer más puedes visitar [el sitio web](https://pizarra.categulario.tk)
 
 ## ¿Y cómo se ve esto?
 
@@ -56,7 +44,7 @@ Podría ser que estos dos comandos funcionen:
     brew install gtk+3 adwaita-icon-theme
     cargo run
 
-## Empaquetado
+## Liberación de una versión
 
 (esto es para mi, no para ti)
 
