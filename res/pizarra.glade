@@ -516,7 +516,7 @@ Todo se hará más pequeño</property>
     <property name="website">https://pizarra.categulario.tk</property>
     <property name="website-label" translatable="yes">pizarra.categulario.tk</property>
     <property name="authors">Abraham Toriz
-Contribuciones de Federico Mena, David</property>
+Contribuciones de Federico Mena, @tyoc213</property>
     <property name="logo-icon-name">pizarra</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
