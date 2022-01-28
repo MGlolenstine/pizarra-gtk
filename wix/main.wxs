@@ -266,53 +266,6 @@ cause installation errors.
               </Directory>
             </Directory>
 
-            <Directory Id='Themes' Name='themes'>
-              <Directory Id='Windows10' Name='Windows-10-Dark'>
-                <Component Id='ThemeLicense' Guid='*' Win64='$(var.Win64)'>
-                  <File Id='ThemeLicenseFile' Name='settings.ini' DiskId='1' Source='submodules/Windows-10-Dark/LICENSE.md' KeyPath='yes'/>
-                </Component>
-
-                <Directory Id='gtk320' Name='gtk-3.20'>
-                  <Component Id='SettingsTheme' Guid='*' Win64='$(var.Win64)'>
-                    <File Id='SettingsThemeFile' Name='settings.ini' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/settings.ini' KeyPath='yes'/>
-                  </Component>
-                  <Component Id='gtkcss' Guid='*' Win64='$(var.Win64)'>
-                    <File Id='gtkcssFile' Name='gtk.css' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/gtk.css' KeyPath='yes'/>
-                  </Component>
-
-                  <Directory Id='Assets' Name='assets'>
-                    <Component Id='theme0' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme0File' Name='close-focused.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/close-focused.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme1' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme1File' Name='close-focused-active.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/close-focused-active.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme2' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme2File' Name='close-unfocused.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/close-unfocused.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme3' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme3File' Name='maximize-focused.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/maximize-focused.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme4' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme4File' Name='maximize-unfocused.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/maximize-unfocused.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme5' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme5File' Name='minimize-focused.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/minimize-focused.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme6' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme6File' Name='minimize-unfocused.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/minimize-unfocused.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme7' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme7File' Name='slider-vert.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/slider-vert.png' KeyPath='yes'/>
-                    </Component>
-                    <Component Id='theme8' Guid='*' Win64='$(var.Win64)'>
-                      <File Id='theme8File' Name='slider-vert-hover.png' DiskId='1' Source='submodules/Windows-10-Dark/gtk-3.20/assets/slider-vert-hover.png' KeyPath='yes'/>
-                    </Component>
-                  </Directory>
-                </Directory>
-              </Directory>
-            </Directory>
-
             <Directory Id='Glib' Name='glib-2.0'>
               <Directory Id='schemas' Name='schemas'>
                 <Component Id='GlibSchema' Guid='*' Win64='$(var.Win64)'>
@@ -419,22 +372,9 @@ cause installation errors.
 
       <ComponentRef Id='idx0'/>
 
-      <ComponentRef Id='ThemeLicense'/>
-      <ComponentRef Id='SettingsTheme'/>
-      <ComponentRef Id='gtkcss'/>
       <ComponentRef Id='GlibSchema'/>
       <ComponentRef Id='ColorChooserSchema'/>
       <ComponentRef Id='FileChooserSchema'/>
-
-      <ComponentRef Id='theme0'/>
-      <ComponentRef Id='theme1'/>
-      <ComponentRef Id='theme2'/>
-      <ComponentRef Id='theme3'/>
-      <ComponentRef Id='theme4'/>
-      <ComponentRef Id='theme5'/>
-      <ComponentRef Id='theme6'/>
-      <ComponentRef Id='theme7'/>
-      <ComponentRef Id='theme8'/>
     </Feature>
 
     <SetProperty Id='ARPINSTALLLOCATION' Value='[APPLICATIONFOLDER]' After='CostFinalize'/>
