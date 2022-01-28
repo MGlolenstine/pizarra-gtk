@@ -512,11 +512,12 @@ Todo se hará más pequeño</property>
     <property name="program-name">Pizarra</property>
     <property name="version">1.2.1</property>
     <property name="copyright" translatable="yes">Copyright 2021 Abraham Toriz</property>
-    <property name="comments" translatable="yes">La forma más simple y satisfactoria de hacer garabatos en la computadora.</property>
+    <property name="comments" translatable="yes">Como un pizarrón de gis, pero digital, vectorial e infinito.</property>
     <property name="website">https://pizarra.categulario.tk</property>
     <property name="website-label" translatable="yes">pizarra.categulario.tk</property>
-    <property name="authors">Abraham Toriz</property>
-    <property name="logo-icon-name">tk.categulario.pizarra</property>
+    <property name="authors">Abraham Toriz
+Contribuciones de Federico Mena, David</property>
+    <property name="logo-icon-name">pizarra</property>
     <property name="license-type">gpl-3-0</property>
     <child internal-child="vbox">
       <object class="GtkBox">

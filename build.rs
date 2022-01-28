@@ -14,6 +14,7 @@ const RESOURCES: &[&str] = &[
     "pizarra.glade",
 
     "icons/tk.categulario.pizarra.svg",
+    "icons/pizarra.png",
 
     "icons/alpha.svg",
     "icons/circle_by_three_points.svg",

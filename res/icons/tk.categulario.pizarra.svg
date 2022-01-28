@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <svg
-   xmlns:dc="http://purl.org/dc/elements/1.1/"
-   xmlns:cc="http://creativecommons.org/ns#"
-   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-   xmlns:svg="http://www.w3.org/2000/svg"
-   xmlns="http://www.w3.org/2000/svg"
-   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
-   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
    width="442.51135pt"
    height="442.51135pt"
    viewBox="0 0 442.51135 442.51135"
    version="1.1"
    id="svg335"
-   sodipodi:docname="peteca.svg"
-   inkscape:version="1.0 (4035a4fb49, 2020-05-01)"
-   inkscape:export-filename="/home/abraham/Imágenes/peteca.png"
-   inkscape:export-xdpi="20.83"
-   inkscape:export-ydpi="20.83">
+   sodipodi:docname="tk.categulario.pizarra.svg"
+   inkscape:version="1.1.1 (3bf5ae0d25, 2021-09-20, custom)"
+   inkscape:export-filename="/home/abraham/src/pizarra/gui/res/icons/pizarra.png"
+   inkscape:export-xdpi="41.650002"
+   inkscape:export-ydpi="41.650002"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:dc="http://purl.org/dc/elements/1.1/">
   <metadata
      id="metadata341">
     <rdf:RDF>
@@ -25,7 +25,6 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -41,8 +40,8 @@
      guidetolerance="10"
      inkscape:pageopacity="0"
      inkscape:pageshadow="2"
-     inkscape:window-width="1920"
-     inkscape:window-height="1024"
+     inkscape:window-width="1600"
+     inkscape:window-height="835"
      id="namedview337"
      showgrid="false"
      fit-margin-top="0"
@@ -50,12 +49,14 @@
      fit-margin-right="0"
      fit-margin-bottom="0"
      inkscape:zoom="1.0249832"
-     inkscape:cx="214.83775"
-     inkscape:cy="350.2923"
+     inkscape:cx="300.49273"
+     inkscape:cy="315.61493"
      inkscape:window-x="0"
-     inkscape:window-y="28"
+     inkscape:window-y="32"
      inkscape:window-maximized="1"
-     inkscape:current-layer="svg335" />
+     inkscape:current-layer="svg335"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="pt" />
   <rect
      id="rect2"
      style="fill:#2e3530;fill-opacity:1;stroke:none;stroke-width:1.11518"
