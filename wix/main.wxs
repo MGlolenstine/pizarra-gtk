@@ -79,11 +79,16 @@ cause installation errors.
           <Directory Id='Bin' Name='bin'>
             <Component Id='binary0' Guid='*' Win64='$(var.Win64)'>
               <File
-                Id='binary0file'
+                Id='PizarraBinary'
                 Name='pizarra.exe'
                 DiskId='1'
                 Source='target\$(var.Profile)\pizarra.exe'
                 KeyPath='yes'/>
+              <ProgId Id="Pizarra.Svg" Description="Open svg files">
+                <Extension Id="svg" ContentType="image/svg+xml">
+                  <Verb Id="open" Command="open" TargetFile="PizarraBinary" Argument="&quot;%1&quot;"/>
+                </Extension>
+              </ProgId>
             </Component>
 
             <Component Id='dll1' Guid='*' Win64='$(var.Win64)'>
@@ -291,7 +296,7 @@ cause installation errors.
 
     <DirectoryRef Id="ApplicationProgramsFolder">
       <Component Id="ApplicationShortcut" Guid="D8E06AF7-0D37-45EF-870A-FB044256F7DA">
-        <Shortcut Id="ApplicationStartMenuShortcut" Name="Pizarra" Description="Tu pizarrón virtual de confianza" Target="[#binary0file]" WorkingDirectory="APPLICATIONFOLDER" Icon="AppIcon">
+        <Shortcut Id="ApplicationStartMenuShortcut" Name="Pizarra" Description="Tu pizarrón virtual de confianza" Target="[#PizarraBinary]" WorkingDirectory="APPLICATIONFOLDER" Icon="AppIcon">
           <Icon Id="AppIcon" SourceFile="target\$(var.Profile)\pizarra.exe" />
         </Shortcut>
         <RemoveFolder Id="CleanUpShortCut" Directory="ApplicationProgramsFolder" On="uninstall"/>
@@ -438,7 +443,7 @@ cause installation errors.
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOXTEXT" Value="Iniciar la pizarra" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALCHECKBOX" Value="1" />
 
-    <Property Id="WixShellExecTarget" Value="[#binary0file]" />
+    <Property Id="WixShellExecTarget" Value="[#PizarraBinary]" />
     <CustomAction Id="LaunchApplication" BinaryKey="WixCA" DllEntry="WixShellExec" Impersonate="yes" />
   </Product>
 </Wix>
