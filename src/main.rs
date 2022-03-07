@@ -230,7 +230,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                 .handle_mouse_button_pressed_flags(
                     gtk_button(event.button()),
                     Vec2D::from(event.position()),
-                    event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
+                    event.device_tool().and_then(|dt| gtk_tool(dt.tool_type())),
                 );
 
             match redraw_hint {
@@ -255,7 +255,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
                     gtk_button(event.button()),
                     Vec2D::from(event.position()),
                     gtk_flags(event.state()),
-                    event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
+                    event.device_tool().and_then(|dt| gtk_tool(dt.tool_type())),
                 );
 
             match redraw_hint {
@@ -282,7 +282,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
             .handle_mouse_move_flags(
                 Vec2D::new_screen(x, y),
                 gtk_flags(event.state()),
-                event.device_tool().map(|dt| gtk_tool(dt.tool_type())).flatten(),
+                event.device_tool().and_then(|dt| gtk_tool(dt.tool_type())),
             );
 
         match redraw_hint {
