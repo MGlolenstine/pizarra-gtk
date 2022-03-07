@@ -10,22 +10,22 @@ authors = ["Abraham Toriz <categulario@gmail.com>"]
 version = "1.7.2"
 
 [dependencies]
-gdk = "0.14"
+gdk = "0.15"
 glib = "0.10"
-pizarra = { path = "../lib" }
+pizarra = "2.0.4"
 env_logger = "0.9"
 directories = "3"
 toml = "0.5"
 
 [dependencies.cairo-rs]
-version = "0.14"
+version = "0.15"
 features = ["svg", "png"]
 
 [dependencies.gtk]
-version = "0.14"
+version = "0.15"
 features = ["v3_22"]
 
 [dependencies.gio]
-version = "0.14"
+version = "0.15"
 [target."cfg(windows)".build-dependencies]
 winres = "0.1"

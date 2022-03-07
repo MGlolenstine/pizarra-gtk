@@ -301,7 +301,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     }));
 
     drawing_area.connect_size_allocate(clone!(@strong controller, @strong surface => move |dw, allocation| {
-        controller.borrow_mut().resize(Vec2D::new_screen(allocation.width as f64, allocation.height as f64));
+        controller.borrow_mut().resize(Vec2D::new_screen(allocation.width() as f64, allocation.height() as f64));
         invalidate_and_redraw(&controller.borrow(), &surface, dw);
     }));
 
@@ -313,7 +313,7 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     color_chooser.connect_color_set(clone!(@strong controller, @strong dwb => move |chooser| {
         let rgba = chooser.rgba();
         let prev_alpha = controller.borrow().selected_color().alpha();
-        controller.borrow_mut().set_color(Color::from_float_rgb(rgba.red, rgba.green, rgba.blue).with_alpha(prev_alpha));
+        controller.borrow_mut().set_color(Color::from_float_rgb(rgba.red(), rgba.green(), rgba.blue()).with_alpha(prev_alpha));
         dwb.borrow().queue_draw();
     }));
 
@@ -578,28 +578,34 @@ fn init(app: &Application, filename: Option<PathBuf>) {
     window.show_all();
 }
 
+fn pre_launch(app: &Application, file: Option<PathBuf>) {
+    let resource_bytes = include_bytes!(concat!(env!("OUT_DIR"), "/res/resources.gresource"));
+    let resource_data = gtk::glib::Bytes::from(&resource_bytes[..]);
+    gio::resources_register(&gio::Resource::from_data(&resource_data).unwrap());
+
+    let icon_theme = gtk::IconTheme::default().expect("failed to get default icon theme");
+    icon_theme.add_resource_path("/tk/categulario/pizarra/icons");
+
+    Window::set_default_icon_name("tk.categulario.pizarra");
+
+    init(app, file);
+}
+
 fn main() {
     #[cfg(not(windows))]
     env_logger::init();
 
     let application = Application::new(
         Some("tk.categulario.pizarra"),
-        ApplicationFlags::NON_UNIQUE,
+        ApplicationFlags::NON_UNIQUE | ApplicationFlags::HANDLES_OPEN,
     );
 
-    let arguments: Vec<_> = env::args().collect();
-
     application.connect_activate(move |app| {
-        let resource_bytes = include_bytes!(concat!(env!("OUT_DIR"), "/res/resources.gresource"));
-        let resource_data = gtk::glib::Bytes::from(&resource_bytes[..]);
-        gio::resources_register(&gio::Resource::from_data(&resource_data).unwrap());
+        pre_launch(app, None);
+    });
 
-        let icon_theme = gtk::IconTheme::default().expect("failed to get default icon theme");
-        icon_theme.add_resource_path("/tk/categulario/pizarra/icons");
-
-        Window::set_default_icon_name("tk.categulario.pizarra");
-
-        init(app, arguments.get(1).map(|f| f.into()));
+    application.connect_open(move |app, files, _hint| {
+        pre_launch(app, files.first().and_then(|f| f.path()));
     });
 
     application.run();
