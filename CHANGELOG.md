@@ -1,5 +1,11 @@
 # Cambios
 
+## 1.7.3
+
+- Permite usar los menús 'abrir con' en Linux
+- Corrige un pequeño problema al abrir archivos que especifican un color
+  rgb(0%,0%,0%)
+
 ## 1.7.0
 
 ### Herramientas
