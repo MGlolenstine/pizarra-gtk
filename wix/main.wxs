@@ -84,7 +84,7 @@ cause installation errors.
                 DiskId='1'
                 Source='target\$(var.Profile)\pizarra.exe'
                 KeyPath='yes'/>
-              <ProgId Id="Pizarra.Svg" Description="Open svg files">
+              <ProgId Id="Pizarra.Svg" Description="Dibujo">
                 <Extension Id="svg" ContentType="image/svg+xml">
                   <Verb Id="open" Command="open" TargetFile="PizarraBinary" Argument="&quot;%1&quot;"/>
                 </Extension>
