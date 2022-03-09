@@ -13,7 +13,7 @@ echo "# Maintainer: Abraham Toriz <categulario at gmail dot com>
 pkgname=pizarra-git
 pkgver=$VERSION
 pkgrel=1
-pkgdesc='Simple Gtk drawing application'
+pkgdesc='A free-hand vector drawing application with infinite canvas (binary version)'
 arch=('i686' 'x86_64')
 url='https://gitlab.com/categulario/pizarra-gtk'
 license=('GPL3')
@@ -21,7 +21,7 @@ depends=('gtk3')
 makedepends=('cargo' 'git')
 provides=('pizarra')
 conflicts=('pizarra')
-source=('pizarra-git::git+https://gitlab.com/categulario/pizarra-gtk')
+source=('pizarra-git::git+https://gitlab.com/categulario/pizarra-gtk#branch=main')
 sha256sums=('SKIP')
 
 pkgver() {
