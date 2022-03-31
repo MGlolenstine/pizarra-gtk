@@ -1,9 +1,10 @@
 [Desktop Entry]
-Version=1.0
+Version=1.7.3
 Name=Pizarra
-GenericName=Drawing tool
-Comment=Make amazing drawings
-Exec=/usr/bin/pizarra %F
+GenericName=Take notes
+Comment=Take notes like a pro
+TryExec=/usr/bin/pizarra
+Exec=/usr/bin/pizarra %f
 Icon=/usr/share/icons/hicolor/scalable/apps/pizarra.svg
 Terminal=false
 Type=Application
