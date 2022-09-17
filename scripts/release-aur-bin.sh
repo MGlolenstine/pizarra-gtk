@@ -25,7 +25,7 @@ license=('GPL3')
 depends=('gtk3')
 provides=('pizarra')
 conflicts=('pizarra')
-source=(\"https://pizarra.categulario.tk/releases/any-linux/pizarra-\$pkgver-\$arch.tar.gz\")
+source=(\"https://pizarra.categulario.xyz/releases/any-linux/pizarra-\$pkgver-\$arch.tar.gz\")
 sha256sums=('$SUM')
 
 package() {

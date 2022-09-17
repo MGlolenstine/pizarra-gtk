@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.7.4
+
+- Actualiza los enlaces a sitios web, pues me mudo de dominio
+
 ## 1.7.3
 
 - Permite usar los menús 'abrir con' en Linux

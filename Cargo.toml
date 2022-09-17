@@ -1,8 +1,8 @@
 [package]
 name = "pizarra"
 description = "Tu pizarrón virtual de confianza"
-documentation = "https://pizarra.categulario.tk"
-homepage = "https://pizarra.categulario.tk"
+documentation = "https://pizarra.categulario.xyz"
+homepage = "https://pizarra.categulario.xyz"
 repository = "https://gitlab.com/categulario/pizarra-gtk"
 license-file = "LICENSE"
 edition = "2021"

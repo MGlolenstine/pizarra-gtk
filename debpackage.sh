@@ -3,7 +3,7 @@ DPKG_STAGING="debian-package"
 DPKG_DIR="${DPKG_STAGING}/dpkg"
 
 PROJECT_MANTAINER="Abraham Toriz Cruz"
-PROJECT_HOMEPAGE="https://pizarra.categulario.tk"
+PROJECT_HOMEPAGE="https://pizarra.categulario.xyz"
 PROJECT_NAME=pizarra
 PROJECT_VERSION=${CI_COMMIT_TAG:1}
 

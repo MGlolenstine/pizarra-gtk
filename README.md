@@ -13,13 +13,13 @@ podría ser un mouse o trackpad
 Este repositorio es el frontend GTK de la pizarra. Lo realmente interesante está
 en [este otro repositorio](https://gitlab.com/categulario/pizarra).
 
-Para conocer más puedes visitar [el sitio web](https://pizarra.categulario.tk)
+Para conocer más puedes visitar [el sitio web](https://pizarra.categulario.xyz)
 
 ## ¿Y cómo se ve esto?
 
 En este momento se ve así:
 
-![Vista de la quinta pre-versión de la pizarra](https://categulario.tk/pizarra_demo_1.3.1.png)
+![Vista de la quinta pre-versión de la pizarra](https://categulario.xyz/pizarra_demo_1.3.1.png)
 
 ## Para compilar
 
@@ -35,7 +35,7 @@ está en `target/release/pizarra`
 
 ### En windows
 
-[Escribí una entrada en mi blog sobre cómo hacer esto](https://blog.categulario.tk/como-compilar-la-pizarra-en-windows.html)
+[Escribí una entrada en mi blog sobre cómo hacer esto](https://blog.categulario.xyz/como-compilar-la-pizarra-en-windows.html)
 
 ### En mac
 

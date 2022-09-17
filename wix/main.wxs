@@ -394,7 +394,7 @@ cause installation errors.
     <!--<Icon Id='ProductICO' SourceFile='wix\Product.ico'/>-->
     <!--<Property Id='ARPPRODUCTICON' Value='ProductICO' />-->
 
-    <Property Id='ARPHELPLINK' Value='https://pizarra.categulario.tk'/>
+    <Property Id='ARPHELPLINK' Value='https://pizarra.categulario.xyz'/>
     <Property Id="ARPPRODUCTICON" Value="AppIcon" />
 
     <UI>
