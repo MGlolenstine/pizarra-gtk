@@ -511,7 +511,7 @@ Todo se hará más pequeño</property>
     <property name="transient-for">main-window</property>
     <property name="program-name">Pizarra</property>
     <property name="version">1.2.1</property>
-    <property name="copyright" translatable="yes">Copyright 2021 Abraham Toriz</property>
+    <property name="copyright" translatable="yes">Copyright 2022 Abraham Toriz</property>
     <property name="comments" translatable="yes">Como un pizarrón de gis, pero digital, vectorial e infinito.</property>
     <property name="website">https://pizarra.categulario.xyz</property>
     <property name="website-label" translatable="yes">pizarra.categulario.xyz</property>
