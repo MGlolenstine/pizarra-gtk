@@ -1,5 +1,9 @@
 # Cambios
 
+## 1.7.5
+
+* Corrige las descripciones de los paquetes AUR.
+
 ## 1.7.4
 
 - Actualiza los enlaces a sitios web, pues me mudo de dominio
