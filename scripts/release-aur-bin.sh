@@ -18,7 +18,7 @@ echo "# Maintainer: Abraham Toriz <categulario at gmail dot com>
 pkgname=pizarra-bin
 pkgver=$VERSION
 pkgrel=1
-pkgdesc='A free-hand vector drawing application with infinite canvas (git version)'
+pkgdesc='A free-hand vector drawing application with infinite canvas (binary version)'
 arch=('x86_64')
 url='https://gitlab.com/categulario/pizarra-gtk'
 license=('GPL3')
