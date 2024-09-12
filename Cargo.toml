@@ -16,6 +16,8 @@ pizarra = "2.0.4"
 env_logger = "0.9"
 directories = "3"
 toml = "0.5"
+rust-i18n = "3.1.2"
+gettext-rs = "0.7.1"
 
 [dependencies.cairo-rs]
 version = "0.15"

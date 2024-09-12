@@ -1,0 +1,118 @@
+# Spanish translations for PACKAGE package.
+# Copyright (C) 2024 THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+#  <mglolenstine@gmail.com>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-09-12 19:05+0200\n"
+"PO-Revision-Date: 2024-09-12 19:06+0200\n"
+"Last-Translator:  <mglolenstine@gmail.com>\n"
+"Language-Team: Spanish <es@tp.org.es>\n"
+"Language: es\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: res/pizarra.glade:33
+msgid "_Archivo"
+msgstr ""
+
+#: res/pizarra.glade:113
+msgid "_Editar"
+msgstr ""
+
+#: res/pizarra.glade:145
+msgid "_Ver"
+msgstr ""
+
+#: res/pizarra.glade:168
+msgid "Ay_uda"
+msgstr ""
+
+#: res/pizarra.glade:222
+msgid "Úsala para dibujar libremente sobre la pizarra"
+msgstr ""
+
+#: res/pizarra.glade:223
+msgid "Lápiz"
+msgstr ""
+
+#: res/pizarra.glade:231
+msgid "Rectángulo"
+msgstr ""
+
+#: res/pizarra.glade:239
+msgid "Polígono"
+msgstr ""
+
+#: res/pizarra.glade:247
+msgid "Círculo por el centro y un punto"
+msgstr ""
+
+#: res/pizarra.glade:255
+msgid "Círculo por tres puntos"
+msgstr ""
+
+#: res/pizarra.glade:263
+msgid "Elipse por los focos y un punto"
+msgstr ""
+
+#: res/pizarra.glade:271
+msgid "Cuadrícula"
+msgstr ""
+
+#: res/pizarra.glade:279
+msgid "Cuadrícula libre"
+msgstr ""
+
+#: res/pizarra.glade:293
+msgid "Goma"
+msgstr ""
+
+#: res/pizarra.glade:300 res/pizarra.glade:327
+msgid "Pizarra"
+msgstr ""
+
+#: res/pizarra.glade:334
+msgid "Cambia el color con el que se dibujan las figuras"
+msgstr ""
+
+#: res/pizarra.glade:349
+msgid ""
+"Incrementa el nivel de zoom\n"
+"¡Todo se hará más grande!"
+msgstr ""
+
+#: res/pizarra.glade:365
+msgid "Regresa al centro de la pizarra con el nivel de zoom inicial"
+msgstr ""
+
+#: res/pizarra.glade:380
+msgid ""
+"Zoom hacia afuera\n"
+"Todo se hará más pequeño"
+msgstr ""
+
+#: res/pizarra.glade:402
+msgid "Opciones de la pizarra"
+msgstr ""
+
+#: res/pizarra.glade:424
+msgid "Cambia la herramienta de dibujo"
+msgstr ""
+
+#: res/pizarra.glade:514
+msgid "Copyright 2022 Abraham Toriz"
+msgstr ""
+
+#: res/pizarra.glade:515
+msgid "Como un pizarrón de gis, pero digital, vectorial e infinito."
+msgstr ""
+
+#: res/pizarra.glade:517
+msgid "pizarra.categulario.xyz"
+msgstr ""

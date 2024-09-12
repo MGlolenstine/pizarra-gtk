@@ -12,10 +12,8 @@ const XML_FOOTER: &str = r#"    </gresource>
 
 const RESOURCES: &[&str] = &[
     "pizarra.glade",
-
     "icons/tk.categulario.pizarra.svg",
     "icons/pizarra.png",
-
     "icons/alpha.svg",
     "icons/circle_by_three_points.svg",
     "icons/circle_by_center_and_point.svg",
@@ -27,10 +25,13 @@ const RESOURCES: &[&str] = &[
     "icons/thickness.svg",
     "icons/grid.svg",
     "icons/free_grid.svg",
+    "../locales/en.mo",
+    // "locales/es.mo",
 ];
 
 fn main() {
     println!("cargo:rerun-if-changed=res/pizarra.glade");
+    println!("cargo:rerun-if-changed=locales/en.mo");
 
     let out_dir = env::var("OUT_DIR").unwrap();
     let mut resources = PathBuf::from(&out_dir);
@@ -46,7 +47,7 @@ fn main() {
     }
 
     let mut xml = String::with_capacity(
-        XML_HEADER.len() + XML_FOOTER.len() + RESOURCES.iter().map(|s| s.len()).sum::<usize>()
+        XML_HEADER.len() + XML_FOOTER.len() + RESOURCES.iter().map(|s| s.len()).sum::<usize>(),
     );
 
     xml.push_str(XML_HEADER);
@@ -54,8 +55,7 @@ fn main() {
     for filename in RESOURCES.iter() {
         xml.push_str(&format!(
             "\t\t<file>{}</file>\n",
-            filename
-                .trim_start_matches("res/")
+            filename.trim_start_matches("res/")
         ));
     }
 

@@ -1,16 +1,15 @@
+use std::cell::RefCell;
+use std::fs::File;
 use std::io::{Read, Write};
 use std::path::{Path, PathBuf};
-use std::fs::File;
 use std::rc::Rc;
-use std::cell::RefCell;
 
-use gtk::{
-    ApplicationWindow, DrawingArea, FileChooserNative, FileChooserAction,
-    ResponseType, HeaderBar, MessageDialog, DialogFlags, MessageType,
-    ButtonsType, Window,
-};
+use cairo::{Context, ImageSurface};
 use gtk::prelude::*;
-use cairo::{ImageSurface, Context};
+use gtk::{
+    ApplicationWindow, ButtonsType, DialogFlags, DrawingArea, FileChooserAction, FileChooserNative,
+    HeaderBar, MessageDialog, MessageType, ResponseType, Window,
+};
 
 use pizarra::prelude::*;
 
@@ -33,19 +32,25 @@ pub fn set_subtitle(header_bar: &HeaderBar, save_status: &SaveStatus) {
         SaveStatus::NewAndEmpty => {
             header_bar.set_title(Some("Pizarra"));
             header_bar.set_subtitle(None);
-        },
+        }
         SaveStatus::NewAndChanged => {
-            header_bar.set_title(Some("*Dibujo sin guardar"));
+            header_bar.set_title(Some(&t!("*Drawing not saved")));
             header_bar.set_subtitle(None);
-        },
+        }
         SaveStatus::Unsaved(path) => {
-            header_bar.set_title(Some(&format!("*{}", path.file_name().unwrap().to_string_lossy())));
+            header_bar.set_title(Some(&format!(
+                "*{}",
+                path.file_name().unwrap().to_string_lossy()
+            )));
             header_bar.set_subtitle(Some(&format!("{}", path.parent().unwrap().display())));
-        },
+        }
         SaveStatus::Saved(path) => {
-            header_bar.set_title(Some(&format!("{}", path.file_name().unwrap().to_string_lossy())));
+            header_bar.set_title(Some(&format!(
+                "{}",
+                path.file_name().unwrap().to_string_lossy()
+            )));
             header_bar.set_subtitle(Some(&format!("{}", path.parent().unwrap().display())));
-        },
+        }
     }
 }
 
@@ -76,11 +81,19 @@ fn save_to_svg_logic(controller: Rc<RefCell<Pizarra>>, filename: &Path) -> std::
     Ok(())
 }
 
-pub fn save_to_svg_logic_with_error_dialg(window: &ApplicationWindow, controller: Rc<RefCell<Pizarra>>, filename: &Path) -> Inhibit {
+pub fn save_to_svg_logic_with_error_dialg(
+    window: &ApplicationWindow,
+    controller: Rc<RefCell<Pizarra>>,
+    filename: &Path,
+) -> Inhibit {
     match save_to_svg_logic(controller, filename) {
         Ok(_) => Inhibit(false),
         Err(e) => {
-            dialog(window, &format!("Falló esto:\n\n{}", e), MessageType::Error);
+            dialog(
+                window,
+                &t!("Error: %{error}", error = e),
+                MessageType::Error,
+            );
 
             Inhibit(true)
         }
@@ -88,9 +101,18 @@ pub fn save_to_svg_logic_with_error_dialg(window: &ApplicationWindow, controller
 }
 
 /// Implements the logic of the _save-as_ feature
-fn save_as_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>) -> std::io::Result<()>
-{
-    let save_file_chooser = FileChooserNative::new(Some("Guardar"), Some(window), FileChooserAction::Save, Some("Guardar"), Some("Cancelar"));
+fn save_as_logic(
+    window: &ApplicationWindow,
+    header_bar: &HeaderBar,
+    controller: Rc<RefCell<Pizarra>>,
+) -> std::io::Result<()> {
+    let save_file_chooser = FileChooserNative::new(
+        Some(&t!("Save")),
+        Some(window),
+        FileChooserAction::Save,
+        Some(&t!("Save")),
+        Some(&t!("Cancel")),
+    );
     let res = save_file_chooser.run();
 
     if res == ResponseType::Accept {
@@ -103,12 +125,19 @@ fn save_as_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller:
     Ok(())
 }
 
-pub fn save_as_with_error_dialog(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>) -> Result<(), ()>
-{
+pub fn save_as_with_error_dialog(
+    window: &ApplicationWindow,
+    header_bar: &HeaderBar,
+    controller: Rc<RefCell<Pizarra>>,
+) -> Result<(), ()> {
     match save_as_logic(window, header_bar, controller) {
         Ok(_) => Ok(()),
         Err(e) => {
-            dialog(window, &format!("Falló esto:\n\n{}", e), MessageType::Error);
+            dialog(
+                window,
+                &t!("Error: %{error}", error = e),
+                MessageType::Error,
+            );
 
             Err(())
         }
@@ -116,8 +145,20 @@ pub fn save_as_with_error_dialog(window: &ApplicationWindow, header_bar: &Header
 }
 
 /// Logic of the open dialog
-pub fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller: Rc<RefCell<Pizarra>>, surface: Rc<RefCell<ImageSurface>>, dwb: Rc<RefCell<DrawingArea>>) {
-    let open_file_chooser = FileChooserNative::new(Some("Abrir"), Some(window), FileChooserAction::Open, Some("Abrir"), Some("Cancelar"));
+pub fn open_logic(
+    window: &ApplicationWindow,
+    header_bar: &HeaderBar,
+    controller: Rc<RefCell<Pizarra>>,
+    surface: Rc<RefCell<ImageSurface>>,
+    dwb: Rc<RefCell<DrawingArea>>,
+) {
+    let open_file_chooser = FileChooserNative::new(
+        Some(&t!("Open")),
+        Some(window),
+        FileChooserAction::Open,
+        Some(&t!("Open")),
+        Some(&t!("Cancel")),
+    );
     let res = open_file_chooser.run();
 
     if res == ResponseType::Accept {
@@ -132,13 +173,21 @@ pub fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller
                         invalidate_and_redraw(&controller.borrow(), &surface, &dwb.borrow());
                         set_subtitle(header_bar, controller.borrow().get_save_status());
                     } else {
-                        dialog(window, "No pude interpretar el formato de este archivo :(", MessageType::Error);
+                        dialog(
+                            window,
+                            &t!("Failed to interpret the format of this file :("),
+                            MessageType::Error,
+                        );
                     }
                 } else {
-                    dialog(window, "No pude leer los contenidos del archivo :(", MessageType::Error);
+                    dialog(
+                        window,
+                        "Failed to read the contents of the file :(",
+                        MessageType::Error,
+                    );
                 }
             } else {
-                dialog(window, "Ese archivo no existe :(", MessageType::Error);
+                dialog(window, "This file does not exist :(", MessageType::Error);
             }
         }
     }
@@ -146,7 +195,13 @@ pub fn open_logic(window: &ApplicationWindow, header_bar: &HeaderBar, controller
 
 /// Implements the logic of the export feature
 pub fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>) {
-    let export_file_chooser = FileChooserNative::new(Some("Exportar"), Some(window), FileChooserAction::Save, Some("Exportar"), Some("Cancelar"));
+    let export_file_chooser = FileChooserNative::new(
+        Some(&t!("Export")),
+        Some(window),
+        FileChooserAction::Save,
+        Some(&t!("Export")),
+        Some(&t!("Cancel")),
+    );
     let res = export_file_chooser.run();
 
     if res == ResponseType::Accept {
@@ -154,13 +209,21 @@ pub fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>
             if let Some([topleft, bottomright]) = controller.borrow().get_bounds() {
                 let export_padding = controller.borrow().config().export_padding;
                 let pngfilename = ensure_extension(&filename, "png");
-                let dimensions = (bottomright - topleft).abs() + Vec2D::new(export_padding * 2.0.into(), export_padding * 2.0.into());
-                let surface = ImageSurface::create(cairo::Format::ARgb32, dimensions.x.val() as i32, dimensions.y.val() as i32).unwrap();
+                let dimensions = (bottomright - topleft).abs()
+                    + Vec2D::new(export_padding * 2.0.into(), export_padding * 2.0.into());
+                let surface = ImageSurface::create(
+                    cairo::Format::ARgb32,
+                    dimensions.x.val() as i32,
+                    dimensions.y.val() as i32,
+                )
+                .unwrap();
                 let context = cairo::Context::new(&surface).unwrap();
 
                 render_drawing(&controller.borrow(), &context, topleft);
 
-                surface.write_to_png(&mut File::create(pngfilename).unwrap()).unwrap();
+                surface
+                    .write_to_png(&mut File::create(pngfilename).unwrap())
+                    .unwrap();
             }
         }
     }
@@ -171,7 +234,11 @@ pub fn export_logic<P: IsA<Window>>(window: &P, controller: Rc<RefCell<Pizarra>>
 ///
 /// Called on translate or rotate but not during the drawing phase of a new
 /// shape
-pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurface>, dw: &DrawingArea) {
+pub fn invalidate_and_redraw(
+    controller: &Pizarra,
+    surface: &RefCell<ImageSurface>,
+    dw: &DrawingArea,
+) {
     let t = controller.get_transform();
     let commands = controller.draw_commands_for_screen();
     let p = controller.get_dimensions();
@@ -179,7 +246,8 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
     let width = p.x.val();
     let height = p.y.val();
 
-    let new_surface = ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
+    let new_surface =
+        ImageSurface::create(cairo::Format::ARgb32, width as i32, height as i32).unwrap();
     let context = cairo::Context::new(&new_surface).unwrap();
 
     let bgcolor = controller.bgcolor();
@@ -202,7 +270,7 @@ pub fn invalidate_and_redraw(controller: &Pizarra, surface: &RefCell<ImageSurfac
 fn render_drawing(controller: &Pizarra, ctx: &Context, topleft: Vec2D<WorldUnit>) {
     let export_padding = controller.config().export_padding;
     let t = Transform::new_translate(
-        ((topleft - Vec2D::new(export_padding, export_padding)) * -1.0).to_vec2d()
+        ((topleft - Vec2D::new(export_padding, export_padding)) * -1.0).to_vec2d(),
     );
     let bgcolor = controller.bgcolor();
 

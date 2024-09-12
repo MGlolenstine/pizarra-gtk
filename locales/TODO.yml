@@ -1,0 +1,24 @@
+'*Drawing not saved':
+  en: '*Drawing not saved'
+Cancel:
+  en: Cancel
+'Error: %{error}':
+  en: 'Error: %{error}'
+Export:
+  en: Export
+Failed to interpret the format of this file :(:
+  en: Failed to interpret the format of this file :(
+'No':
+  en: 'No'
+Open:
+  en: Open
+Save:
+  en: Save
+There are some unsaved changes present. Would you like to save?:
+  en: ' Would you like to save?'
+'Yes':
+  en: 'Yes'
+You made some changes. Would you like to save?:
+  en: ' Would you like to save?'
+_version: 2
+
